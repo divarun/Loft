@@ -106,3 +106,118 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ── LETTER DROP: FALLING TILE STYLES ── */
+/* DOM-injected tiles created imperatively in useLetterDrop.ts */
+.tile {
+  position: absolute;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  text-align: center;
+  cursor: default;
+  will-change: transform;
+}
+.tile.urgent {
+  border-color: rgba(196, 104, 122, 0.45);
+  background: rgba(196, 104, 122, 0.07);
+}
+.tile-letters {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 5px;
+}
+.tile-letter {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 400;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  width: 26px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-soft);
+  letter-spacing: -0.01em;
+}
+.tile.urgent .tile-letter {
+  border-color: rgba(196, 104, 122, 0.4);
+  color: var(--accent);
+}
+.tile-hint {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+.ground-letter {
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  font-weight: 400;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-dim2);
+  border-radius: 5px;
+  width: 26px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+.tile.tile-safe {
+  border-color: var(--border2);
+  background: var(--surface2);
+}
+.tile.tile-warn {
+  border-color: rgba(196, 164, 110, 0.45);
+  background: rgba(196, 164, 110, 0.06);
+}
+.tile.tile-warn .tile-letter {
+  border-color: rgba(196, 164, 110, 0.35);
+  color: #c4a46e;
+}
+.tile.tile-hot {
+  border-color: rgba(212, 130, 80, 0.55);
+  background: rgba(212, 130, 80, 0.08);
+}
+.tile.tile-hot .tile-letter {
+  border-color: rgba(212, 130, 80, 0.45);
+  color: #d48050;
+}
+.tile.tile-critical {
+  border-color: rgba(196, 104, 122, 0.7);
+  background: rgba(196, 104, 122, 0.1);
+  animation: tileFlash 0.5s ease-in-out infinite alternate;
+}
+.tile.tile-critical .tile-letter {
+  border-color: rgba(196, 104, 122, 0.55);
+  color: var(--accent);
+}
+@keyframes tileFlash {
+  from { box-shadow: 0 0 6px rgba(196, 104, 122, 0.2); }
+  to   { box-shadow: 0 0 16px rgba(196, 104, 122, 0.5); }
+}
+.tile.clutch-flash {
+  animation: clutchFlash 0.5s ease-out;
+}
+@keyframes clutchFlash {
+  0%   { box-shadow: 0 0 0 rgba(196, 164, 110, 0); }
+  30%  { box-shadow: 0 0 24px rgba(196, 164, 110, 0.7); }
+  100% { box-shadow: 0 0 0 rgba(196, 164, 110, 0); }
+}
+@keyframes tileSpawn {
+  0%   { transform: translateY(-90px) scale(0.85); opacity: 0; }
+  60%  { transform: translateY(-90px) scale(1.05); opacity: 1; }
+  100% { transform: translateY(-90px) scale(1); }
+}
+.tile--spawning {
+  animation: tileSpawn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@media (max-width: 480px) {
+  .tile-letter { width: 22px; height: 24px; font-size: 0.85rem; }
+}

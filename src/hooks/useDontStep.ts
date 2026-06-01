@@ -32,6 +32,7 @@ function feetKey(diff: DontStepDifficulty): string {
 }
 
 function loadMemory(diff: DontStepDifficulty): MemoryEntry[] {
+  if (typeof window === 'undefined') return []
   try { return JSON.parse(localStorage.getItem(memKey(diff)) || '[]') }
   catch { return [] }
 }
@@ -42,6 +43,7 @@ function saveMemory(mem: MemoryEntry[], diff: DontStepDifficulty) {
 }
 
 function loadFootprints(diff: DontStepDifficulty): Set<string> {
+  if (typeof window === 'undefined') return new Set()
   try {
     const raw = JSON.parse(localStorage.getItem(feetKey(diff)) || '[]')
     return new Set<string>(raw)
@@ -54,6 +56,7 @@ function saveFootprints(feet: Set<string>, diff: DontStepDifficulty) {
 }
 
 function loadBest(): number {
+  if (typeof window === 'undefined') return 0
   return parseInt(localStorage.getItem('dsoi_best') || '0', 10)
 }
 
