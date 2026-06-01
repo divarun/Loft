@@ -15,7 +15,7 @@ export interface Country {
   lon?: number
 }
 
-export type ClueKey = 'continent' | 'pop' | 'borders' | 'capital' | 'shape' | 'flag' | 'hint'
+export type ClueKey = 'continent' | 'pop' | 'borders' | 'capital' | 'shape' | 'flag' | 'landmark'
 export type ClueState = 'locked' | 'revealed' | 'correct' | 'lost'
 export type GameMode = 'daily' | 'practice'
 export type Difficulty = 'easy' | 'medium' | 'hard'

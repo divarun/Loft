@@ -335,13 +335,21 @@
   display: flex;
   align-items: flex-start;
   gap: 0.85rem;
-  animation: slideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: clueReveal 0.38s cubic-bezier(0.22, 1, 0.36, 1);
   width: 100%;
   min-width: 0;
   overflow: hidden;
+  transition: border-color 0.3s;
 }
 
-.clueCardFirst { border-color: var(--accent-dim2); }
+.clueCardLatest {
+  border-color: var(--accent-dim2);
+  box-shadow: 0 0 0 1px var(--accent-dim2) inset;
+}
+
+.clueCardLatest .clueLabel {
+  color: var(--accent);
+}
 
 .clueTypeFlag     { border-left: 3px solid rgba(126,184,212,0.4); }
 .clueTypeShape    { border-left: 3px solid rgba(196,164,110,0.4); }
@@ -350,10 +358,10 @@
 .clueTypePop      { border-left: 3px solid rgba(160,126,212,0.3); }
 .clueTypeHint     { border-left: 3px solid rgba(212,196,126,0.3); }
 
-@keyframes slideIn {
-  0%   { opacity: 0; transform: translateY(-14px) scale(0.97); }
-  65%  { opacity: 1; transform: translateY(2px) scale(1.01); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes clueReveal {
+  0%   { opacity: 0; transform: scale(0.9) translateY(10px); filter: blur(3px); }
+  55%  { opacity: 1; transform: scale(1.025) translateY(-2px); filter: blur(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
 }
 
 .clueIcon {
@@ -451,10 +459,9 @@
 /* ── HINT ROW ── */
 .hintRow {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
-  align-items: center;
   margin-bottom: 1.25rem;
-  flex-wrap: wrap;
   width: 100%;
 }
 
@@ -464,13 +471,59 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-muted);
-  flex-shrink: 0;
+  padding: 0.5rem 0;
 }
 
 .costBadge {
   font-size: 0.68rem;
   color: var(--warn, #c4a46e);
   font-weight: 500;
+}
+
+/* ── HERO REVEAL BUTTON ── */
+.btnRevealHero {
+  width: 100%;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius, 12px);
+  padding: 0.95rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--sans);
+  color: var(--accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  transition: background 0.15s, color 0.15s, transform 0.1s, box-shadow 0.2s;
+  letter-spacing: 0.01em;
+  animation: heroGlow 2.4s ease-in-out infinite;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.btnRevealHero:hover {
+  background: var(--accent);
+  color: #071219;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(126, 184, 212, 0.3);
+  animation: none;
+}
+
+.btnRevealHero:active { transform: scale(0.98); }
+.btnRevealHero:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+@keyframes heroGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(126, 184, 212, 0); }
+  50%       { box-shadow: 0 0 0 4px rgba(126, 184, 212, 0.12); }
+}
+
+.costBadgeHero {
+  font-size: 0.75rem;
+  opacity: 0.65;
+  font-weight: 500;
+  margin-left: auto;
 }
 
 .btnGhost {
@@ -496,7 +549,7 @@
 .btnGhost:disabled { opacity: 0.35; cursor: not-allowed; }
 .btnGhost:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-.btnSkip { margin-left: auto; }
+.btnSkip { align-self: flex-end; }
 
 /* ── STREAK PILL ── */
 .streakPill {
@@ -678,16 +731,6 @@
 .diffBadgeHard   { color: var(--danger, #c4687a);  border-color: var(--danger, #c4687a);  background: rgba(196,104,122,0.12); }
 .diffBadgeDaily  { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
 
-/* ── REVEAL BUTTON PULSE ── */
-@keyframes revealPulse {
-  0%, 100% { border-color: var(--border2); box-shadow: none; color: var(--text-muted); }
-  50%       { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); color: var(--accent); }
-}
-
-.btnReveal {
-  animation: revealPulse 2.2s ease-in-out infinite;
-}
-
 /* ── CONFETTI ── */
 .confettiWrap {
   position: fixed;
@@ -746,8 +789,8 @@
 
 /* ── REDUCED MOTION ── */
 @media (prefers-reduced-motion: reduce) {
-  .scoreVal, .scoreDelta, .scoreCritical, .btnReveal,
-  .clueCard, .confettiPiece { animation: none; }
+  .scoreVal, .scoreDelta, .scoreCritical,
+  .btnRevealHero, .clueCard, .confettiPiece { animation: none; }
 }
 
 /* ── MEDIA ── */

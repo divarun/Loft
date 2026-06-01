@@ -18,7 +18,7 @@ const CLUE_META: Record<ClueKey, { icon: string; label: string; typeClass: strin
   capital:   { icon: '🏛️', label: 'Capital',    typeClass: styles.clueTypeCapital },
   shape:     { icon: '📐', label: 'Shape',      typeClass: styles.clueTypeShape },
   flag:      { icon: '🏴', label: 'Flag',       typeClass: styles.clueTypeFlag },
-  hint:      { icon: '💡', label: 'Hint',       typeClass: styles.clueTypeHint },
+  landmark:  { icon: '🏛️', label: 'Landmark',   typeClass: styles.clueTypeHint },
 }
 
 type TabId = 'play' | 'how' | 'scores'
@@ -161,7 +161,7 @@ export default function AtlasRushGame() {
             }}
           />
         )
-      case 'hint': return current.hint
+      case 'landmark': return current.landmark
       default:     return null
     }
   }
@@ -172,6 +172,8 @@ export default function AtlasRushGame() {
   const lockedKeys = CLUE_KEYS.slice(revealed) as ClueKey[]
 
   const canReveal = !roundOver && revealed < CLUE_KEYS.length
+  const nextClueKey = CLUE_KEYS[revealed] as ClueKey | undefined
+  const nextClueLabel = nextClueKey ? CLUE_META[nextClueKey]?.label : undefined
 
   const correctCode = roundOver && current ? current.code : undefined
 
@@ -339,11 +341,11 @@ export default function AtlasRushGame() {
         <div className={styles.cluesStack} aria-label="Revealed clues" aria-live="polite">
           {revealedKeys.map((key, i) => {
             const meta = CLUE_META[key]
-            const isFirst = i === 0
+            const isLatest = !roundOver && i === revealedKeys.length - 1
             return (
               <div
                 key={key}
-                className={`${styles.clueCard} ${meta.typeClass}${isFirst ? ` ${styles.clueCardFirst}` : ''}`}
+                className={`${styles.clueCard} ${meta.typeClass}${isLatest ? ` ${styles.clueCardLatest}` : ''}`}
               >
                 <div className={styles.clueIcon} aria-hidden="true">{meta.icon}</div>
                 <div className={styles.clueContent}>
@@ -419,20 +421,19 @@ export default function AtlasRushGame() {
               </>
             )}
 
-            {/* Hint / skip / reveal row */}
+            {/* Reveal / skip row */}
             <div className={styles.hintRow}>
-              {canReveal && (
+              {canReveal ? (
                 <button
                   type="button"
-                  className={`${styles.btnGhost} ${styles.btnReveal}`}
+                  className={styles.btnRevealHero}
                   onClick={revealNextClue}
-                  aria-label={`Reveal next clue — costs ${CLUE_COST} points`}
+                  aria-label={`Reveal ${nextClueLabel ?? 'next clue'} — costs ${CLUE_COST} points`}
                 >
-                  Reveal clue
-                  <span className={styles.costBadge} aria-hidden="true"> −{CLUE_COST}</span>
+                  Reveal {nextClueLabel ?? 'next clue'}
+                  <span className={styles.costBadgeHero} aria-hidden="true">−{CLUE_COST} pts</span>
                 </button>
-              )}
-              {!canReveal && (
+              ) : (
                 <span className={styles.hintLabel}>All clues revealed</span>
               )}
               <button

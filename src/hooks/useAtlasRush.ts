@@ -13,7 +13,7 @@ import { getDayNumber } from '@/lib/dayNumber'
 const MAX_SCORE = 1000
 const CLUE_COST = 150
 const WRONG_COST = 50
-const CLUE_KEYS: ClueKey[] = ['continent', 'pop', 'borders', 'capital', 'shape', 'flag', 'hint']
+const CLUE_KEYS: ClueKey[] = ['continent', 'pop', 'borders', 'capital', 'shape', 'flag', 'landmark']
 const WORLD_ATLAS_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json'
 
 // ---------------------------------------------------------------------------

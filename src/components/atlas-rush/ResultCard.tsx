@@ -39,6 +39,9 @@ export default function ResultCard({
     setTimeout(() => setCopied(false), 2000)
   }
 
+  // Strip URL from the display block; the full text (with URL) goes to clipboard via onCopyShare
+  const displayShareText = shareText.replace(/\nhttps?:\/\/[^\n]+/g, '')
+
   return (
     <div
       className={`${styles.card} ${won ? styles.cardWin : styles.cardLoss}`}
@@ -104,7 +107,7 @@ export default function ResultCard({
         aria-label="Share text"
         tabIndex={0}
       >
-        {shareText}
+        {displayShareText}
       </div>
 
       <button type="button" className={styles.shareBtn} onClick={handleCopy} aria-label="Copy share text to clipboard">

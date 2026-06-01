@@ -73,8 +73,66 @@
 
 .hint {
   text-align: center;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
-  padding: 0.5rem 0 0.75rem;
+  padding: 0.4rem 0 0.65rem;
+  letter-spacing: 0.02em;
+}
+
+/* ── ZOOM CONTROLS ── */
+.controls {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  z-index: 5;
+}
+
+.zoomBtn {
+  background: rgba(23, 23, 29, 0.85);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--sans);
+  color: var(--text-soft);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  backdrop-filter: blur(4px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.zoomBtn:hover {
+  background: var(--surface2);
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.zoomBtnDisabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.zoomBtnReset {
+  font-size: 0.85rem;
+}
+
+.zoomLevel {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  padding: 0 0.15rem;
+  min-width: 30px;
+  text-align: center;
   letter-spacing: 0.02em;
 }

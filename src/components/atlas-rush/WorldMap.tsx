@@ -8,7 +8,6 @@ import styles from './WorldMap.module.css'
 
 const WORLD_ATLAS_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json'
 
-// Country code → name lookup (simplified; used for map click)
 const NUM_TO_CODE: Record<number, string> = {
   4: 'af', 8: 'al', 12: 'dz', 20: 'ad', 24: 'ao', 28: 'ag', 32: 'ar', 51: 'am',
   36: 'au', 40: 'at', 31: 'az', 44: 'bs', 48: 'bh', 50: 'bd', 52: 'bb', 112: 'by',
@@ -37,13 +36,15 @@ const NUM_TO_CODE: Record<number, string> = {
   548: 'vu', 862: 've', 704: 'vn', 887: 'ye', 894: 'zm', 716: 'zw', 383: 'xk',
 }
 
-// We'll keep a simple code->name map fetched once
 let codeToNameCache: Record<string, string> | null = null
+
+interface VB { x: number; y: number; w: number; h: number }
+const FULL_VB: VB = { x: 0, y: 0, w: 960, h: 560 }
 
 interface WorldMapProps {
   onGuess: (name: string) => void
-  guessedCountries: string[]  // country codes that were guessed wrong
-  correctCode?: string         // shown in green when round over
+  guessedCountries: string[]
+  correctCode?: string
   allCountries: Array<{ name: string; code: string }>
 }
 
@@ -52,9 +53,16 @@ export default function WorldMap({ onGuess, guessedCountries, correctCode, allCo
   const [paths, setPaths] = useState<Array<{ id: string; d: string; code: string }>>([])
   const [loading, setLoading] = useState(true)
   const [tooltip, setTooltip] = useState<{ name: string; x: number; y: number } | null>(null)
+  const [vb, setVb] = useState<VB>(FULL_VB)
+  const [panning, setPanning] = useState(false)
+
+  const vbRef = useRef<VB>(FULL_VB)
+  const dragRef = useRef<{ cx: number; cy: number; vb: VB } | null>(null)
+  const didDragRef = useRef(false)
+
+  useEffect(() => { vbRef.current = vb }, [vb])
 
   useEffect(() => {
-    // Build code->name cache from allCountries
     if (allCountries.length > 0 && !codeToNameCache) {
       codeToNameCache = {}
       for (const c of allCountries) codeToNameCache[c.code] = c.name
@@ -64,44 +72,121 @@ export default function WorldMap({ onGuess, guessedCountries, correctCode, allCo
   useEffect(() => {
     let cancelled = false
     fetch(WORLD_ATLAS_URL)
-      .then((r) => r.json())
-      .then((topo) => {
+      .then(r => r.json())
+      .then(topo => {
         if (cancelled) return
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const geojson = feature(topo, (topo as any).objects.countries) as any
-
-        const projection = geoNaturalEarth1()
-          .scale(150)
-          .translate([480, 280])
-
-        const pathGenerator = geoPath(projection)
-
+        const projection = geoNaturalEarth1().scale(150).translate([480, 280])
+        const pathGen = geoPath(projection)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const computed = geojson.features.map((f: any) => ({
           id: String(f.id),
-          d: pathGenerator(f) ?? '',
+          d: pathGen(f) ?? '',
           code: NUM_TO_CODE[Number(f.id)] ?? '',
         }))
         setPaths(computed)
         setLoading(false)
       })
-      .catch(() => {
-        if (!cancelled) setLoading(false)
-      })
+      .catch(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
   }, [])
 
-  const handleClick = useCallback(
-    (code: string) => {
-      if (!code || !codeToNameCache) return
-      const name = codeToNameCache[code]
-      if (name) onGuess(name)
-    },
-    [onGuess]
-  )
+  // Non-passive wheel listener for zoom
+  useEffect(() => {
+    const svg = svgRef.current
+    if (!svg) return
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault()
+      const rect = svg.getBoundingClientRect()
+      const curr = vbRef.current
+      const svgX = curr.x + (e.clientX - rect.left) / rect.width * curr.w
+      const svgY = curr.y + (e.clientY - rect.top) / rect.height * curr.h
+      const factor = e.deltaY > 0 ? 1.25 : 0.8
+      const nw = Math.min(Math.max(curr.w * factor, 80), FULL_VB.w)
+      const nh = nw * (FULL_VB.h / FULL_VB.w)
+      const nx = svgX - (svgX - curr.x) * (nw / curr.w)
+      const ny = svgY - (svgY - curr.y) * (nh / curr.h)
+      setVb({
+        x: Math.max(0, Math.min(nx, FULL_VB.w - nw)),
+        y: Math.max(0, Math.min(ny, FULL_VB.h - nh)),
+        w: nw,
+        h: nh,
+      })
+    }
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    return () => svg.removeEventListener('wheel', onWheel)
+  }, [])
+
+  function clampVb(v: VB): VB {
+    return {
+      x: Math.max(0, Math.min(v.x, FULL_VB.w - v.w)),
+      y: Math.max(0, Math.min(v.y, FULL_VB.h - v.h)),
+      w: v.w,
+      h: v.h,
+    }
+  }
+
+  function handleZoomIn() {
+    setVb(prev => {
+      const cx = prev.x + prev.w / 2
+      const cy = prev.y + prev.h / 2
+      const nw = Math.max(prev.w / 2, 80)
+      const nh = nw * (FULL_VB.h / FULL_VB.w)
+      return clampVb({ x: cx - nw / 2, y: cy - nh / 2, w: nw, h: nh })
+    })
+  }
+
+  function handleZoomOut() {
+    setVb(prev => {
+      const cx = prev.x + prev.w / 2
+      const cy = prev.y + prev.h / 2
+      const nw = Math.min(prev.w * 2, FULL_VB.w)
+      const nh = Math.min(prev.h * 2, FULL_VB.h)
+      return clampVb({ x: cx - nw / 2, y: cy - nh / 2, w: nw, h: nh })
+    })
+  }
+
+  function handleSvgMouseDown(e: React.MouseEvent<SVGSVGElement>) {
+    if (e.button !== 0) return
+    didDragRef.current = false
+    dragRef.current = { cx: e.clientX, cy: e.clientY, vb: { ...vb } }
+    setPanning(true)
+  }
+
+  function handleSvgMouseMove(e: React.MouseEvent<SVGSVGElement>) {
+    if (!dragRef.current) return
+    const dx = e.clientX - dragRef.current.cx
+    const dy = e.clientY - dragRef.current.cy
+    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) didDragRef.current = true
+    if (!didDragRef.current) return
+    const rect = svgRef.current!.getBoundingClientRect()
+    const svgDx = (dx / rect.width) * dragRef.current.vb.w
+    const svgDy = (dy / rect.height) * dragRef.current.vb.h
+    setVb(clampVb({
+      x: dragRef.current.vb.x - svgDx,
+      y: dragRef.current.vb.y - svgDy,
+      w: dragRef.current.vb.w,
+      h: dragRef.current.vb.h,
+    }))
+    setTooltip(null)
+  }
+
+  function handleSvgMouseUp() {
+    dragRef.current = null
+    setPanning(false)
+  }
+
+  const handlePathClick = useCallback((code: string) => {
+    if (didDragRef.current) return
+    if (!code || !codeToNameCache) return
+    const name = codeToNameCache[code]
+    if (name) onGuess(name)
+  }, [onGuess])
 
   const handleMouseEnter = useCallback(
     (e: React.MouseEvent<SVGPathElement>, code: string) => {
+      if (didDragRef.current) return
       if (!code || !codeToNameCache) return
       const name = codeToNameCache[code]
       if (!name) return
@@ -112,18 +197,17 @@ export default function WorldMap({ onGuess, guessedCountries, correctCode, allCo
     []
   )
 
-  const handleMouseMove = useCallback(
+  const handleMouseMoveOnPath = useCallback(
     (e: React.MouseEvent<SVGPathElement>) => {
+      if (didDragRef.current) return
       const rect = svgRef.current?.getBoundingClientRect()
       if (!rect) return
-      setTooltip((prev) => prev ? { ...prev, x: e.clientX - rect.left, y: e.clientY - rect.top } : null)
+      setTooltip(prev => prev ? { ...prev, x: e.clientX - rect.left, y: e.clientY - rect.top } : null)
     },
     []
   )
 
-  const handleMouseLeave = useCallback(() => {
-    setTooltip(null)
-  }, [])
+  const handleMouseLeave = useCallback(() => setTooltip(null), [])
 
   if (loading) {
     return (
@@ -135,13 +219,20 @@ export default function WorldMap({ onGuess, guessedCountries, correctCode, allCo
 
   const guessedSet = new Set(guessedCountries)
   const correctNumId = correctCode ? getNumericId(correctCode) : undefined
+  const isZoomed = vb.w < FULL_VB.w * 0.99
+  const zoomPct = Math.round(FULL_VB.w / vb.w * 100)
 
   return (
     <div className={styles.container}>
       <svg
         ref={svgRef}
-        viewBox="0 0 960 560"
+        viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
         className={styles.svg}
+        style={{ cursor: panning ? 'grabbing' : isZoomed ? 'grab' : 'crosshair' }}
+        onMouseDown={handleSvgMouseDown}
+        onMouseMove={handleSvgMouseMove}
+        onMouseUp={handleSvgMouseUp}
+        onMouseLeave={handleSvgMouseUp}
         aria-label="World map — click a country to guess"
         role="img"
       >
@@ -159,9 +250,9 @@ export default function WorldMap({ onGuess, guessedCountries, correctCode, allCo
               key={id}
               d={d}
               className={cls}
-              onClick={() => !isCorrect && !isWrong && handleClick(code)}
+              onClick={() => !isCorrect && !isWrong && handlePathClick(code)}
               onMouseEnter={(e) => handleMouseEnter(e, code)}
-              onMouseMove={handleMouseMove}
+              onMouseMove={handleMouseMoveOnPath}
               onMouseLeave={handleMouseLeave}
               tabIndex={isCorrect || isWrong ? -1 : 0}
               role="button"
@@ -169,14 +260,15 @@ export default function WorldMap({ onGuess, guessedCountries, correctCode, allCo
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault()
-                  if (!isCorrect && !isWrong) handleClick(code)
+                  if (!isCorrect && !isWrong) handlePathClick(code)
                 }
               }}
             />
           )
         })}
       </svg>
-      {tooltip && (
+
+      {tooltip && !panning && (
         <div
           className={styles.tooltip}
           style={{ left: tooltip.x, top: tooltip.y }}
@@ -185,7 +277,34 @@ export default function WorldMap({ onGuess, guessedCountries, correctCode, allCo
           {tooltip.name}
         </div>
       )}
-      <p className={styles.hint}>Click a country to guess</p>
+
+      <div className={styles.controls} aria-label="Map zoom controls">
+        <button className={styles.zoomBtn} onClick={handleZoomIn} type="button" aria-label="Zoom in" title="Zoom in">+</button>
+        {isZoomed && <span className={styles.zoomLevel} aria-live="polite">{zoomPct}%</span>}
+        <button
+          className={`${styles.zoomBtn}${!isZoomed ? ` ${styles.zoomBtnDisabled}` : ''}`}
+          onClick={handleZoomOut}
+          type="button"
+          aria-label="Zoom out"
+          title="Zoom out"
+          disabled={!isZoomed}
+        >−</button>
+        {isZoomed && (
+          <button
+            className={`${styles.zoomBtn} ${styles.zoomBtnReset}`}
+            onClick={() => setVb(FULL_VB)}
+            type="button"
+            aria-label="Reset zoom"
+            title="Reset zoom"
+          >↺</button>
+        )}
+      </div>
+
+      <p className={styles.hint}>
+        {isZoomed
+          ? 'Drag to pan · scroll to zoom · click to guess'
+          : 'Click a country to guess · scroll or + to zoom in'}
+      </p>
     </div>
   )
 }
