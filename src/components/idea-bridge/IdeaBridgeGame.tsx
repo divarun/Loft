@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { getDayNumber } from '@/lib/dayNumber'
 import { useIdeaBridge, type IdeaBridgeMode } from '@/hooks/useIdeaBridge'
 import ChainViz from './ChainViz'
@@ -16,14 +16,24 @@ export default function IdeaBridgeGame() {
   const [scoreAnimate, setScoreAnimate] = useState(false)
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy')
   const scoreRef = useRef(1000)
+  const deltaIdRef = useRef(0)
+  const [deltas, setDeltas] = useState<Array<{ id: number; value: number }>>([])
+  const [showConfetti, setShowConfetti] = useState(false)
+  const prevDoneRef = useRef(false)
 
   const game = useIdeaBridge()
 
   const dayNumber = getDayNumber()
 
-  // Animate score when it changes
+  // Animate score and show floating delta when it drops
   useEffect(() => {
     if (game.score !== prevScore) {
+      if (game.score < prevScore) {
+        const delta = game.score - prevScore
+        const id = ++deltaIdRef.current
+        setDeltas(d => [...d, { id, value: delta }])
+        setTimeout(() => setDeltas(d => d.filter(x => x.id !== id)), 900)
+      }
       setScoreAnimate(true)
       const t = setTimeout(() => setScoreAnimate(false), 250)
       setPrevScore(game.score)
@@ -31,6 +41,15 @@ export default function IdeaBridgeGame() {
       return () => clearTimeout(t)
     }
   }, [game.score, prevScore])
+
+  // Confetti on win
+  useEffect(() => {
+    if (game.done && game.score > 0 && !prevDoneRef.current) {
+      setShowConfetti(true)
+      setTimeout(() => setShowConfetti(false), 2500)
+    }
+    prevDoneRef.current = game.done
+  }, [game.done, game.score])
 
   const scoreClass = () => {
     const s = game.score
@@ -54,6 +73,14 @@ export default function IdeaBridgeGame() {
   }
 
   return (
+    <>
+    {showConfetti && (
+      <div className={styles.confettiWrap} aria-hidden="true">
+        {Array.from({ length: 18 }, (_, i) => (
+          <span key={i} className={styles.confettiPiece} />
+        ))}
+      </div>
+    )}
     <div className={styles.wrap}>
       {/* Mode selector */}
       <div className={styles.modeRow} role="group" aria-label="Game mode">
@@ -174,12 +201,17 @@ export default function IdeaBridgeGame() {
             {/* Score + step row */}
             <div className={styles.metaRow}>
               <div className={styles.scoreBlock}>
-                <span
-                  className={`${styles.scoreN} ${scoreClass()} ${scoreAnimate ? styles.scorePop : ''}`}
-                  aria-label={`Score: ${game.score}`}
-                >
-                  {game.score}
-                </span>
+                <div className={styles.scoreDeltaWrap}>
+                  <span
+                    className={`${styles.scoreN} ${scoreClass()} ${scoreAnimate ? styles.scorePop : ''}`}
+                    aria-label={`Score: ${game.score}`}
+                  >
+                    {game.score}
+                  </span>
+                  {deltas.map(d => (
+                    <span key={d.id} className={styles.scoreDelta} aria-hidden="true">{d.value}</span>
+                  ))}
+                </div>
                 <span className={styles.scoreLabel}>pts</span>
               </div>
               <div className={styles.metaRight}>
@@ -211,8 +243,8 @@ export default function IdeaBridgeGame() {
             {/* Game content: active play or result */}
             {!game.done ? (
               <>
-                {/* Current word prompt */}
-                <div className={styles.currentSection}>
+                {/* Current word prompt — key forces re-animation on each new step */}
+                <div key={game.step} className={styles.currentSection}>
                   <p className={styles.currentLabel}>Connect from</p>
                   <p className={styles.currentWord} aria-live="polite">
                     {game.chain[game.chain.length - 1]}
@@ -360,5 +392,6 @@ export default function IdeaBridgeGame() {
         )}
       </div>
     </div>
+    </>
   )
 }

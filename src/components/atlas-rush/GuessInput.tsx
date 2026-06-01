@@ -178,7 +178,7 @@ export default function GuessInput({
           {feedback}
         </p>
       )}
-      {distanceFeedback && !feedback && (
+      {distanceFeedback && (
         <p className={styles.distanceFeedback} aria-live="polite">
           {distanceFeedback}
         </p>

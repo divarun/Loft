@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { useAtlasRush } from '@/hooks/useAtlasRush'
 import type { ClueKey, ClueState, GameMode, Difficulty, InputMode, BestScore } from '@/types/atlas'
@@ -52,8 +52,37 @@ export default function AtlasRushGame() {
 
   const [activeTab, setActiveTab] = useState<TabId>('play')
   const [copied, setCopied] = useState(false)
-  // Track wrong-guessed countries for map mode
   const [wrongCodes, setWrongCodes] = useState<string[]>([])
+
+  // Score delta animation
+  const prevScoreRef = useRef<number | null>(null)
+  const deltaIdRef = useRef(0)
+  const [deltas, setDeltas] = useState<Array<{ id: number; value: number }>>([])
+
+  useEffect(() => {
+    const score = state.score
+    if (prevScoreRef.current !== null && score < prevScoreRef.current) {
+      const delta = score - prevScoreRef.current
+      const id = ++deltaIdRef.current
+      setDeltas(d => [...d, { id, value: delta }])
+      setTimeout(() => setDeltas(d => d.filter(x => x.id !== id)), 900)
+    }
+    prevScoreRef.current = score
+  }, [state.score])
+
+  // Confetti on win
+  const [showConfetti, setShowConfetti] = useState(false)
+  const prevRoundOverRef = useRef(false)
+
+  useEffect(() => {
+    const roundOver = state.roundOver
+    const won = state.clueStates.some(s => s === 'correct')
+    if (roundOver && won && !prevRoundOverRef.current) {
+      setShowConfetti(true)
+      setTimeout(() => setShowConfetti(false), 2500)
+    }
+    prevRoundOverRef.current = roundOver
+  }, [state.roundOver, state.clueStates])
 
   const handleCopyShare = useCallback(() => {
     copyShare()
@@ -100,7 +129,6 @@ export default function AtlasRushGame() {
     shareText,
     dailyDone,
     dailyResult,
-    dailyStats,
     dayNumber,
     countries,
   } = state
@@ -264,19 +292,6 @@ export default function AtlasRushGame() {
             {dailyResult === 'won' ? '✅ You already played today!' : '❌ You already played today.'}
           </span>
           <span className={styles.dailyDoneHint}>Come back tomorrow for a new country.</span>
-          {dailyStats && (
-            <ResultCard
-              country={current}
-              won={dailyResult === 'won'}
-              score={0}
-              cluesUsed={7}
-              streak={streak}
-              shareText={shareText}
-              onCopyShare={handleCopyShare}
-              dailyStats={dailyStats}
-              isDaily
-            />
-          )}
         </div>
       )
     }
@@ -301,8 +316,13 @@ export default function AtlasRushGame() {
         <div className={styles.scoreBar} aria-label={`Current score: ${score}`}>
           <div className={styles.scoreLeft}>
             <div className={styles.scoreLabel}>Score</div>
-            <div className={`${styles.scoreVal} ${sClass}`} aria-live="polite" aria-atomic="true">
-              {score}
+            <div className={styles.scoreDeltaWrap}>
+              <div key={score} className={`${styles.scoreVal} ${sClass}`} aria-live="polite" aria-atomic="true">
+                {score}
+              </div>
+              {deltas.map(d => (
+                <span key={d.id} className={styles.scoreDelta} aria-hidden="true">{d.value}</span>
+              ))}
             </div>
           </div>
           <div className={styles.clueCounter}>
@@ -404,7 +424,7 @@ export default function AtlasRushGame() {
               {canReveal && (
                 <button
                   type="button"
-                  className={styles.btnGhost}
+                  className={`${styles.btnGhost} ${styles.btnReveal}`}
                   onClick={revealNextClue}
                   aria-label={`Reveal next clue — costs ${CLUE_COST} points`}
                 >
@@ -438,8 +458,6 @@ export default function AtlasRushGame() {
             shareText={shareText}
             onNext={mode === 'practice' ? handleNextRound : undefined}
             onCopyShare={handleCopyShare}
-            dailyStats={mode === 'daily' ? dailyStats : null}
-            isDaily={mode === 'daily'}
           />
         )}
 
@@ -457,6 +475,14 @@ export default function AtlasRushGame() {
   }
 
   return (
+    <>
+    {showConfetti && (
+      <div className={styles.confettiWrap} aria-hidden="true">
+        {Array.from({ length: 18 }, (_, i) => (
+          <span key={i} className={styles.confettiPiece} />
+        ))}
+      </div>
+    )}
     <div className={styles.gameWrap}>
       <span className={styles.srOnly} id="main-skip-target" tabIndex={-1} />
 
@@ -556,5 +582,6 @@ export default function AtlasRushGame() {
         </div>
       </div>
     </div>
+    </>
   )
 }

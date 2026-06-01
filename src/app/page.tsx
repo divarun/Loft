@@ -118,8 +118,8 @@ export default function Home() {
             All games
           </h2>
           <ul className={styles.grid} role="list">
-            {GAMES.map((g) => (
-              <GameCard key={g.href} {...g} />
+            {GAMES.map((g, i) => (
+              <GameCard key={g.href} index={i} {...g} />
             ))}
           </ul>
         </section>

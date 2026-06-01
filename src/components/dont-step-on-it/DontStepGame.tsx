@@ -42,10 +42,22 @@ export default function DontStepGame() {
     prevRunning.current = state.running
   }, [state.running, state.lives, screen])
 
+  // Track whether a game start is pending (canvas not mounted yet)
+  const pendingStart = useRef(false)
+
+  // Start game after 'playing' screen mounts the canvas
+  useEffect(() => {
+    if (screen === 'playing' && pendingStart.current) {
+      pendingStart.current = false
+      startGame()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [screen])
+
   const handleStart = useCallback(() => {
-    startGame()
+    pendingStart.current = true
     setScreen('playing')
-  }, [startGame])
+  }, [])
 
   const handleDifficultyChange = useCallback((d: DontStepDifficulty) => {
     setDiff(d)

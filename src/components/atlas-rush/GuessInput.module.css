@@ -37,13 +37,17 @@
 
 .input.wrong {
   border-color: var(--danger, #c4687a);
-  animation: shake 0.3s ease;
+  box-shadow: 0 0 0 2px rgba(196, 104, 122, 0.25);
+  animation: shake 0.42s ease;
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+  0%,  100% { transform: translateX(0); }
+  12%        { transform: translateX(-9px); }
+  28%        { transform: translateX(8px); }
+  44%        { transform: translateX(-6px); }
+  60%        { transform: translateX(5px); }
+  78%        { transform: translateX(-3px); }
 }
 
 .submitBtn {

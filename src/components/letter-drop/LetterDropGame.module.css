@@ -61,9 +61,16 @@
   font-weight: 300;
   color: var(--accent);
   line-height: 1;
-  transition: transform 0.12s;
+  animation: statPop 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.statN.pop         { transform: scale(1.25); }
+
+@keyframes statPop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.28) translateY(-2px); }
+  65%  { transform: scale(0.93); }
+  100% { transform: scale(1); }
+}
+
 .statNGreen        { color: var(--green); }
 .statNWarn         { color: var(--warn); }
 
@@ -284,13 +291,17 @@
 }
 .answerInputWrong {
   border-color: var(--accent);
-  animation: shake 0.3s;
+  box-shadow: 0 0 0 2px rgba(196, 104, 122, 0.2);
+  animation: shake 0.42s ease;
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25%       { transform: translateX(-5px); }
-  75%       { transform: translateX(5px); }
+  0%,  100% { transform: translateX(0); }
+  12%        { transform: translateX(-9px); }
+  28%        { transform: translateX(8px); }
+  44%        { transform: translateX(-6px); }
+  60%        { transform: translateX(5px); }
+  78%        { transform: translateX(-3px); }
 }
 @keyframes flashGreen {
   0%, 100% { background: transparent; }
@@ -499,71 +510,6 @@
   letter-spacing: 0.08em;
   color: var(--text-muted);
   margin-top: 0.25rem;
-}
-
-/* ── LEADERBOARD FORM ── */
-.lbSection {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 0.85rem;
-  text-align: left;
-}
-
-.lbTitle {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-soft);
-  margin-bottom: 0.6rem;
-}
-
-.lbRow {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.lbInput {
-  flex: 1;
-  min-width: 0;
-  background: var(--surface);
-  border: 2px solid var(--border2);
-  border-radius: 8px;
-  padding: 0 0.85rem;
-  height: 40px;
-  font-size: 0.9rem;
-  font-family: var(--sans);
-  color: var(--text);
-  outline: none;
-  transition: border-color 0.2s;
-  -webkit-appearance: none;
-}
-.lbInput:focus { border-color: var(--accent); }
-.lbInput::placeholder { color: var(--text-muted); font-size: 0.82rem; }
-
-.lbBtn {
-  padding: 0 1rem;
-  height: 40px;
-  flex-shrink: 0;
-  background: var(--accent);
-  color: #0f0608;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  font-family: var(--sans);
-  cursor: pointer;
-  transition: opacity 0.15s;
-}
-.lbBtn:hover { opacity: 0.85; }
-.lbBtn:disabled { opacity: 0.4; cursor: not-allowed; }
-.lbBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-
-.lbResult {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  color: var(--green);
-  min-height: 18px;
 }
 
 .shareBox {

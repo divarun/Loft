@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, KeyboardEvent, FormEvent } from 'react'
+import { useState, useRef, useEffect, useCallback, KeyboardEvent, FormEvent } from 'react'
 import styles from './BridgeInput.module.css'
 
 interface BridgeInputProps {
@@ -21,7 +21,18 @@ export default function BridgeInput({
   explanation,
 }: BridgeInputProps) {
   const [value, setValue] = useState('')
+  const [shakeWrong, setShakeWrong] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const prevWrongRef = useRef<string | null>(null)
+
+  // Shake input on new wrong feedback
+  useEffect(() => {
+    if (wrongFeedback && wrongFeedback !== prevWrongRef.current) {
+      prevWrongRef.current = wrongFeedback
+      setShakeWrong(true)
+      setTimeout(() => setShakeWrong(false), 440)
+    }
+  }, [wrongFeedback])
 
   // Clear input after successful submission (explanation shown means step passed)
   useEffect(() => {
@@ -37,19 +48,19 @@ export default function BridgeInput({
     }
   }, [disabled, validating])
 
-  const handleSubmit = (e?: FormEvent) => {
+  const handleSubmit = useCallback((e?: FormEvent) => {
     e?.preventDefault()
     const trimmed = value.trim()
     if (!trimmed || validating || disabled) return
     onSubmit(trimmed)
     setValue('')
-  }
+  }, [value, validating, disabled, onSubmit])
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSubmit()
     }
-  }
+  }, [handleSubmit])
 
   const isSubmitDisabled = disabled || validating || !value.trim()
 
@@ -74,7 +85,7 @@ export default function BridgeInput({
         <input
           ref={inputRef}
           type="text"
-          className={`${styles.input}${hint ? ` ${styles.hasHint}` : ''}`}
+          className={`${styles.input}${hint ? ` ${styles.hasHint}` : ''}${shakeWrong ? ` ${styles.shakeWrong}` : ''}`}
           value={value}
           onChange={e => setValue(e.target.value)}
           onKeyDown={handleKeyDown}

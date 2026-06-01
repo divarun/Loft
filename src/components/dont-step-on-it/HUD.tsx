@@ -26,7 +26,7 @@ export default function HUD({ score, best, lives, trapCount, previewPhase }: HUD
       {/* Steps */}
       <div className={styles.stat}>
         <span className={styles.label}>Steps</span>
-        <span className={styles.value}>{score}</span>
+        <span key={score} className={styles.value}>{score}</span>
       </div>
 
       {/* Best */}
@@ -38,7 +38,7 @@ export default function HUD({ score, best, lives, trapCount, previewPhase }: HUD
       {/* Lives */}
       <div className={styles.stat}>
         <span className={styles.label}>Lives</span>
-        <div className={styles.livesRow} aria-label={`${lives} lives remaining`}>
+        <div key={lives} className={styles.livesRow} aria-label={`${lives} lives remaining`}>
           <HeartIcon filled={lives >= 1} />
           <HeartIcon filled={lives >= 2} />
           <HeartIcon filled={lives >= 3} />
@@ -48,7 +48,7 @@ export default function HUD({ score, best, lives, trapCount, previewPhase }: HUD
       {/* Trap counter */}
       <div className={styles.stat}>
         <span className={styles.label}>Memory</span>
-        <span className={styles.trapCount}>{trapCount} traps memorized</span>
+        <span key={trapCount} className={styles.trapCount}>{trapCount} traps memorized</span>
       </div>
 
       {/* Preview phase banner — full width row */}

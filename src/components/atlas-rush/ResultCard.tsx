@@ -4,13 +4,6 @@ import { useState, useEffect } from 'react'
 import type { Country } from '@/types/atlas'
 import styles from './ResultCard.module.css'
 
-interface DailyStats {
-  totalPlays: number
-  totalWins: number
-  avgScore: number
-  clueDistribution: Record<string, number>
-}
-
 interface ResultCardProps {
   country: Country
   won: boolean
@@ -20,18 +13,6 @@ interface ResultCardProps {
   shareText: string
   onNext?: () => void
   onCopyShare: () => void
-  dailyStats?: DailyStats | null
-  isDaily: boolean
-}
-
-const CLUE_LABELS: Record<number, string> = {
-  1: 'Continent',
-  2: '+ Pop.',
-  3: '+ Borders',
-  4: '+ Capital',
-  5: '+ Shape',
-  6: '+ Flag',
-  7: '+ Hint',
 }
 
 export default function ResultCard({
@@ -43,8 +24,6 @@ export default function ResultCard({
   shareText,
   onNext,
   onCopyShare,
-  dailyStats,
-  isDaily,
 }: ResultCardProps) {
   const [copied, setCopied] = useState(false)
 
@@ -59,14 +38,6 @@ export default function ResultCard({
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
-
-  const winRate = dailyStats && dailyStats.totalPlays > 0
-    ? Math.round((dailyStats.totalWins / dailyStats.totalPlays) * 100)
-    : 0
-
-  const maxDist = dailyStats
-    ? Math.max(1, ...Object.values(dailyStats.clueDistribution))
-    : 1
 
   return (
     <div
@@ -141,7 +112,7 @@ export default function ResultCard({
       </button>
       {copied && <p className={styles.copiedMsg} role="status" aria-live="polite">Copied to clipboard!</p>}
 
-      {!isDaily && onNext && (
+      {onNext && (
         <div className={styles.nextRow}>
           <button type="button" className={styles.nextBtn} onClick={onNext} aria-label="Play next country">
             Next Country →
@@ -149,41 +120,6 @@ export default function ResultCard({
         </div>
       )}
 
-      {dailyStats && (
-        <div className={styles.dailyStats} aria-label="Today's global statistics">
-          <p className={styles.dailyStatsTitle}>Today&rsquo;s Results</p>
-          <p className={styles.dailyStatsRow}>
-            <strong>{dailyStats.totalPlays}</strong> people played today.{' '}
-            <strong>{winRate}%</strong> won.{' '}
-            Average score: <strong>{Math.round(dailyStats.avgScore)}</strong>
-          </p>
-
-          {Object.keys(dailyStats.clueDistribution).length > 0 && (
-            <>
-              <p className={styles.chartTitle}>Clues needed to win</p>
-              <div className={styles.chart} aria-label="Bar chart of clues used distribution">
-                {Array.from({ length: 7 }, (_, i) => i + 1).map((n) => {
-                  const count = dailyStats.clueDistribution[String(n)] ?? 0
-                  const width = maxDist > 0 ? (count / maxDist) * 100 : 0
-                  return (
-                    <div key={n} className={styles.chartRow}>
-                      <span className={styles.chartLabel}>{CLUE_LABELS[n]}</span>
-                      <div className={styles.chartBarWrap} role="presentation">
-                        <div
-                          className={styles.chartBar}
-                          style={{ width: `${width}%` }}
-                          aria-label={`${count} wins with ${n} clue${n !== 1 ? 's' : ''}`}
-                        />
-                      </div>
-                      <span className={styles.chartCount}>{count}</span>
-                    </div>
-                  )
-                })}
-              </div>
-            </>
-          )}
-        </div>
-      )}
     </div>
   )
 }

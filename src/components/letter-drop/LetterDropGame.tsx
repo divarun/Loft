@@ -5,7 +5,6 @@ import { useLetterDrop } from '@/hooks/useLetterDrop'
 import Arena from './Arena'
 import CategorySelector from './CategorySelector'
 import PowerUpBar from './PowerUpBar'
-import Leaderboard from './Leaderboard'
 import styles from './LetterDropGame.module.css'
 
 type Tab = 'play' | 'how' | 'scores'
@@ -33,7 +32,6 @@ export default function LetterDropGame() {
     applyPowerUp,
     setCategory,
     copyShare,
-    submitToLeaderboard,
   } = useLetterDrop()
 
   const [tab,        setTab]        = useState<Tab>('play')
@@ -49,12 +47,6 @@ export default function LetterDropGame() {
   // Input animation class
   const [inputClass, setInputClass] = useState<'' | 'correct' | 'wrong'>('')
   const feedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  // Leaderboard state
-  const [lbName,     setLbName]     = useState('')
-  const [lbResult,   setLbResult]   = useState('')
-  const [lbLoading,  setLbLoading]  = useState(false)
-  const [lbDone,     setLbDone]     = useState(false)
 
   // Keep sound UI in sync with hook ref
   useEffect(() => {
@@ -143,9 +135,6 @@ export default function LetterDropGame() {
     setGameOver(false)
     setFeedback('')
     setInputVal('')
-    setLbName('')
-    setLbResult('')
-    setLbDone(false)
     prevWordsRef.current = 0
     prevLivesRef.current = 3
     prevScoreRef.current = 0
@@ -185,19 +174,6 @@ export default function LetterDropGame() {
     setCopied(true)
     setTimeout(() => setCopied(false), 2200)
   }, [copyShare])
-
-  const handleLbSubmit = useCallback(async () => {
-    if (!lbName.trim() || lbLoading || lbDone) return
-    setLbLoading(true)
-    const rank = await submitToLeaderboard(lbName.trim())
-    setLbLoading(false)
-    setLbDone(true)
-    if (rank) {
-      setLbResult(`You ranked #${rank} on the leaderboard!`)
-    } else {
-      setLbResult('Score submitted!')
-    }
-  }, [lbName, lbLoading, lbDone, submitToLeaderboard])
 
   const subMsg = state.wordsCorrect >= 15
     ? 'Phenomenal vocabulary!'
@@ -240,25 +216,25 @@ export default function LetterDropGame() {
           {/* Stats bar */}
           <div className={styles.topBar} role="region" aria-label="Game stats" aria-live="polite">
             <div className={styles.statChip}>
-              <div className={`${styles.statN}`} id="stat-score" aria-label={`Score: ${state.score}`}>
+              <div key={state.score} className={`${styles.statN}`} id="stat-score" aria-label={`Score: ${state.score}`}>
                 {state.score}
               </div>
               <div className={styles.statL}>Score</div>
             </div>
             <div className={styles.statChip}>
-              <div className={`${styles.statN}`} id="stat-words" aria-label={`Words: ${state.wordsCorrect}`}>
+              <div key={state.wordsCorrect} className={`${styles.statN}`} id="stat-words" aria-label={`Words: ${state.wordsCorrect}`}>
                 {state.wordsCorrect}
               </div>
               <div className={styles.statL}>Words</div>
             </div>
             <div className={styles.statChip}>
-              <div className={`${styles.statN} ${styles.statNGreen}`} id="stat-level" aria-label={`Level: ${state.level}`}>
+              <div key={state.level} className={`${styles.statN} ${styles.statNGreen}`} id="stat-level" aria-label={`Level: ${state.level}`}>
                 {state.level}
               </div>
               <div className={styles.statL}>Level</div>
             </div>
             <div className={styles.statChip}>
-              <div className={`${styles.statN} ${styles.statNWarn}`} id="stat-combo" aria-label={`Combo: ${state.combo}`}>
+              <div key={state.combo} className={`${styles.statN} ${styles.statNWarn}`} id="stat-combo" aria-label={`Combo: ${state.combo}`}>
                 ×{state.combo}
               </div>
               <div className={styles.statL}>Combo</div>
@@ -416,13 +392,6 @@ export default function LetterDropGame() {
             )}
           </div>
 
-          {/* Online leaderboard */}
-          <div style={{ marginTop: '2rem' }}>
-            <h2 style={{ fontFamily: 'var(--serif)', fontWeight: 300, fontSize: '1.1rem', marginBottom: '0.85rem', color: 'var(--text-soft)' }}>
-              Online Leaderboard
-            </h2>
-            <Leaderboard />
-          </div>
         </div>
       )}
 
@@ -460,35 +429,6 @@ export default function LetterDropGame() {
                 </div>
               ))}
             </div>
-
-            {/* Leaderboard submission */}
-            {state.score > 0 && (
-              <div className={styles.lbSection}>
-                <p className={styles.lbTitle}>Submit to leaderboard</p>
-                <div className={styles.lbRow}>
-                  <input
-                    className={styles.lbInput}
-                    type="text"
-                    placeholder="Your name (max 20 chars)"
-                    maxLength={20}
-                    value={lbName}
-                    onChange={e => setLbName(e.target.value)}
-                    disabled={lbDone || lbLoading}
-                    aria-label="Your name for the leaderboard"
-                    onKeyDown={e => { if (e.key === 'Enter') handleLbSubmit() }}
-                  />
-                  <button
-                    className={styles.lbBtn}
-                    onClick={handleLbSubmit}
-                    disabled={!lbName.trim() || lbLoading || lbDone}
-                    aria-label="Submit score to leaderboard"
-                  >
-                    {lbLoading ? '…' : lbDone ? '✓' : 'Submit'}
-                  </button>
-                </div>
-                {lbResult && <p className={styles.lbResult} aria-live="polite">{lbResult}</p>}
-              </div>
-            )}
 
             {/* Share */}
             <div className={styles.shareBox} aria-label="Share text" role="region">

@@ -1,3 +1,8 @@
+@keyframes cardEntrance {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -11,6 +16,7 @@
   position: relative;
   overflow: hidden;
   height: 100%;
+  animation: cardEntrance 0.5s ease-out backwards;
 }
 
 .card::after {
@@ -144,5 +150,6 @@
   .card,
   .cta {
     transition: none;
+    animation: none;
   }
 }

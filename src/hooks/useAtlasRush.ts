@@ -3,7 +3,7 @@
 import { useReducer, useEffect, useRef, useCallback } from 'react'
 import type { Country, ClueKey, ClueState, GameMode, Difficulty, InputMode, BestScore } from '@/types/atlas'
 import { buildAltNamesMap, normalizeGuess } from '@/lib/normalizeGuess'
-import { haversineKm, distanceFeedback } from '@/lib/haversine'
+import { haversineKm, distanceFeedback, bearingDeg } from '@/lib/haversine'
 import { mulberry32 } from '@/lib/mulberry32'
 import { getDayNumber } from '@/lib/dayNumber'
 
@@ -41,12 +41,6 @@ export interface AtlasRushState {
   shareText: string
   dailyDone: boolean
   dailyResult: 'won' | 'lost' | null
-  dailyStats: {
-    totalPlays: number
-    totalWins: number
-    avgScore: number
-    clueDistribution: Record<string, number>
-  } | null
   dayNumber: number
 }
 
@@ -67,7 +61,6 @@ type Action =
   | { type: 'UPDATE_SUGGESTIONS'; suggestions: string[] }
   | { type: 'CLEAR_FEEDBACK' }
   | { type: 'SET_DAILY_DONE'; result: 'won' | 'lost' }
-  | { type: 'SET_DAILY_STATS'; stats: AtlasRushState['dailyStats'] }
   | { type: 'SAVE_BEST_SCORE'; entry: BestScore }
 
 // ---------------------------------------------------------------------------
@@ -95,7 +88,7 @@ function buildShareText(
   })
   const result = won ? `✅ ${score} pts` : '❌ Not found'
   const streakLine = streak > 1 ? `\n🔥 Streak: ${streak}` : ''
-  return `${label}\n${dots.join('')}\n${result}\nClues used: ${revealed}${streakLine}\nhttps://loft.vercel.app/atlas-rush`
+  return `${label}\n${dots.join('')}\n${result}\nClues used: ${revealed}${streakLine}\nhttps://loft-self.vercel.app/atlas-rush`
 }
 
 function pickCountry(pool: Country[], queue: Country[], rand: () => number): { country: Country; newQueue: Country[] } {
@@ -226,10 +219,6 @@ function reducer(state: AtlasRushState, action: Action): AtlasRushState {
       return { ...state, dailyDone: true, dailyResult: action.result }
     }
 
-    case 'SET_DAILY_STATS': {
-      return { ...state, dailyStats: action.stats }
-    }
-
     case 'SAVE_BEST_SCORE': {
       const updated = [action.entry, ...state.bestScores].slice(0, 20)
       return { ...state, bestScores: updated }
@@ -265,7 +254,6 @@ const initialState: AtlasRushState = {
   shareText: '',
   dailyDone: false,
   dailyResult: null,
-  dailyStats: null,
   dayNumber: 0,
 }
 
@@ -349,8 +337,6 @@ export function useAtlasRush() {
 
       if (done) {
         dispatch({ type: 'SET_DAILY_DONE', result: done })
-        // Also fetch stats to show
-        fetchDailyStats()
         return
       }
 
@@ -378,16 +364,6 @@ export function useAtlasRush() {
     const rand = getRand()
     const { country, newQueue } = pickCountry(pool, state.queue, rand)
     dispatch({ type: 'START_ROUND', country, queue: newQueue })
-  }
-
-  async function fetchDailyStats() {
-    try {
-      const res = await fetch('/api/daily-stats')
-      const stats = await res.json()
-      dispatch({ type: 'SET_DAILY_STATS', stats })
-    } catch {
-      // silently ignore
-    }
   }
 
   function saveBestScore(won: boolean) {
@@ -447,14 +423,6 @@ export function useAtlasRush() {
         if (state.mode === 'daily') {
           const doneKey = `atlasRush_daily_${state.dayNumber}`
           localStorage.setItem(doneKey, 'won')
-          // Record to server
-          fetch('/api/daily-stats', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ won: true, score: state.score, clues: state.revealed }),
-          })
-            .then(() => fetchDailyStats())
-            .catch(() => {})
         }
       } else {
         // Wrong
@@ -465,7 +433,8 @@ export function useAtlasRush() {
           )
           if (guessed && guessed.lat != null && guessed.lon != null && state.current.lat != null && state.current.lon != null) {
             const km = haversineKm(guessed.lat, guessed.lon, state.current.lat, state.current.lon)
-            fb = distanceFeedback(km)
+            const bearing = bearingDeg(guessed.lat, guessed.lon, state.current.lat, state.current.lon)
+            fb = distanceFeedback(km, bearing)
           }
         }
 
@@ -489,13 +458,6 @@ export function useAtlasRush() {
     if (state.mode === 'daily') {
       const doneKey = `atlasRush_daily_${state.dayNumber}`
       localStorage.setItem(doneKey, 'lost')
-      fetch('/api/daily-stats', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ won: false, score: 0, clues: state.revealed }),
-      })
-        .then(() => fetchDailyStats())
-        .catch(() => {})
     }
 
     dispatch({ type: 'SKIP' })

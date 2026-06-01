@@ -37,6 +37,13 @@
   font-weight: 300;
   color: var(--accent, #4ade80);
   line-height: 1;
+  animation: hudPop 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes hudPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.25) translateY(-2px); }
+  100% { transform: scale(1); }
 }
 
 /* Lives row */
@@ -45,6 +52,14 @@
   gap: 0.35rem;
   align-items: center;
   margin-top: 0.1rem;
+  animation: livesShake 0.35s ease;
+}
+
+@keyframes livesShake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-5px); }
+  50%       { transform: translateX(4px); }
+  75%       { transform: translateX(-3px); }
 }
 
 .heart {
@@ -65,6 +80,13 @@
   color: var(--dim, #6a6a80);
   white-space: nowrap;
   margin-top: 0.1rem;
+  animation: trapPop 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes trapPop {
+  0%   { color: var(--dim, #6a6a80); }
+  40%  { color: rgba(196, 104, 122, 0.85); transform: scale(1.1); }
+  100% { color: var(--dim, #6a6a80); transform: scale(1); }
 }
 
 /* Preview phase banner */
@@ -82,6 +104,10 @@
 @keyframes previewPulse {
   from { opacity: 0.6; }
   to   { opacity: 1;   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .value, .livesRow, .trapCount { animation: none; }
 }
 
 /* Compact on very small screens */

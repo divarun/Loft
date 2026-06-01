@@ -10,6 +10,7 @@ interface GameCardProps {
   tags: string[]
   icon: React.ReactNode
   ariaLabel: string
+  index?: number
 }
 
 export default function GameCard({
@@ -21,10 +22,16 @@ export default function GameCard({
   tags,
   icon,
   ariaLabel,
+  index = 0,
 }: GameCardProps) {
   return (
     <li>
-      <Link className={styles.card} href={href} aria-label={ariaLabel}>
+      <Link
+        className={styles.card}
+        href={href}
+        aria-label={ariaLabel}
+        style={{ animationDelay: `${index * 0.07}s` }}
+      >
         <div className={styles.cardHeader}>
           <span className={styles.icon} aria-hidden="true">
             {icon}

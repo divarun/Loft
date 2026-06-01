@@ -245,7 +245,15 @@
 .scoreHigh { color: #78c4a0; }
 .scoreMid  { color: var(--accent); }
 .scoreLow  { color: #c4a46e; }
-.scoreCrit { color: #c4687a; }
+.scoreCrit {
+  color: #c4687a;
+  animation: popScore 0.22s ease-out, critGlow 1.1s ease-in-out 0.22s infinite;
+}
+
+@keyframes critGlow {
+  0%, 100% { text-shadow: 0 0 6px rgba(196, 104, 122, 0.2); }
+  50%       { text-shadow: 0 0 18px rgba(196, 104, 122, 0.65); }
+}
 
 .scorePop {
   animation: popScore 0.22s ease-out;
@@ -256,6 +264,89 @@
   40%  { transform: scale(1.22) translateY(-2px); }
   100% { transform: scale(1); }
 }
+
+/* Floating score delta */
+.scoreDeltaWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.scoreDelta {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  padding-left: 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: var(--sans);
+  color: #c4687a;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: ibFloatUp 0.9s ease-out forwards;
+}
+
+@keyframes ibFloatUp {
+  0%   { opacity: 1; transform: translateY(0); }
+  40%  { opacity: 1; transform: translateY(-12px); }
+  100% { opacity: 0; transform: translateY(-24px); }
+}
+
+/* Current word step transition */
+.currentSection {
+  text-align: center;
+  margin-bottom: 1.25rem;
+  animation: stepIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(-10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Confetti */
+.confettiWrap {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 999;
+}
+
+@keyframes ibConfettiFall {
+  0%   { transform: translateY(-12px) rotate(0deg); opacity: 1; }
+  15%  { opacity: 1; }
+  100% { transform: translateY(110vh) rotate(680deg); opacity: 0; }
+}
+
+.confettiPiece {
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  animation: ibConfettiFall 1.8s ease-in forwards;
+}
+
+.confettiPiece:nth-child(1)  { left:  5%; background: #c9a96e; animation-delay: 0s;     animation-duration: 1.6s; }
+.confettiPiece:nth-child(2)  { left: 11%; background: #78c4a0; animation-delay: 0.05s;  height: 14px; width: 7px; }
+.confettiPiece:nth-child(3)  { left: 18%; background: #c4687a; animation-delay: 0.12s;  border-radius: 50%; }
+.confettiPiece:nth-child(4)  { left: 26%; background: #7eb8d4; animation-delay: 0.02s;  width: 13px; height: 6px; animation-duration: 2s; }
+.confettiPiece:nth-child(5)  { left: 33%; background: #a08ae0; animation-delay: 0.08s; }
+.confettiPiece:nth-child(6)  { left: 41%; background: #c9a96e; animation-delay: 0.15s;  width: 7px; height: 13px; }
+.confettiPiece:nth-child(7)  { left: 50%; background: #78c4a0; animation-delay: 0.03s;  border-radius: 50%; animation-duration: 1.7s; }
+.confettiPiece:nth-child(8)  { left: 58%; background: #c4687a; animation-delay: 0.1s;   width: 12px; height: 5px; }
+.confettiPiece:nth-child(9)  { left: 66%; background: #7eb8d4; animation-delay: 0.18s;  border-radius: 50%; }
+.confettiPiece:nth-child(10) { left: 74%; background: #c9a96e; animation-delay: 0.06s; }
+.confettiPiece:nth-child(11) { left: 82%; background: #a08ae0; animation-delay: 0.13s;  height: 13px; width: 6px; animation-duration: 1.9s; }
+.confettiPiece:nth-child(12) { left: 90%; background: #78c4a0; animation-delay: 0.01s;  border-radius: 50%; }
+.confettiPiece:nth-child(13) { left:  8%; background: #c4687a; animation-delay: 0.17s;  width: 8px; height: 8px; animation-duration: 2.1s; }
+.confettiPiece:nth-child(14) { left: 22%; background: #7eb8d4; animation-delay: 0.09s; }
+.confettiPiece:nth-child(15) { left: 37%; background: #c9a96e; animation-delay: 0.14s;  border-radius: 50%; width: 7px; height: 7px; }
+.confettiPiece:nth-child(16) { left: 54%; background: #a08ae0; animation-delay: 0.04s;  width: 11px; height: 5px; animation-duration: 1.65s; }
+.confettiPiece:nth-child(17) { left: 70%; background: #78c4a0; animation-delay: 0.11s;  border-radius: 50%; }
+.confettiPiece:nth-child(18) { left: 86%; background: #c4687a; animation-delay: 0.07s;  height: 12px; width: 6px; }
 
 .scoreLabel {
   font-size: 0.65rem;
@@ -294,10 +385,6 @@
 .diffHard   { color: #c4687a; border-color: #c4687a; background: rgba(196, 104, 122, 0.12); }
 
 /* ── CURRENT WORD ── */
-.currentSection {
-  text-align: center;
-  margin-bottom: 1.25rem;
-}
 
 .currentLabel {
   font-size: 0.65rem;
@@ -652,6 +739,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .scorePop,
+  .scoreCrit,
+  .scoreDelta,
+  .currentSection,
+  .confettiPiece,
   .loadingSpinner {
     animation: none;
   }

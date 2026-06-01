@@ -634,22 +634,6 @@ export function useLetterDrop() {
     return text
   }, [])
 
-  // ── Leaderboard submit ──────────────────────────────────────────────────
-  const submitToLeaderboard = useCallback(async (name: string): Promise<number | null> => {
-    const s = stateRef.current
-    try {
-      const res = await fetch('/api/leaderboard', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ game: 'letter-drop', name, score: s.score }),
-      })
-      const data = await res.json() as { rank?: number }
-      return data.rank ?? null
-    } catch (_) {
-      return null
-    }
-  }, [])
-
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -671,6 +655,5 @@ export function useLetterDrop() {
     applyPowerUp,
     setCategory,
     copyShare,
-    submitToLeaderboard,
   }
 }
