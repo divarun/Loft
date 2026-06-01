@@ -1,0 +1,18 @@
+/* Per-game accent override — LetterDrop: rose */
+.page {
+  --accent:      #c4687a;
+  --accent-dim:  rgba(196, 104, 122, 0.10);
+  --accent-dim2: rgba(196, 104, 122, 0.22);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.main {
+  width: 100%;
+  max-width: 580px;
+  flex: 1;
+  padding: 0 var(--pad, clamp(1rem, 4vw, 1.5rem)) 5rem;
+}

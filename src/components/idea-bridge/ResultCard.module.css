@@ -1,0 +1,238 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius, 12px);
+  padding: 1.5rem;
+  animation: fadeUp 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  margin-top: 0.5rem;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cardWin {
+  border-color: rgba(120, 196, 160, 0.35);
+}
+
+.cardLoss {
+  border-color: rgba(196, 104, 122, 0.35);
+}
+
+/* Top row: icon + title */
+.top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Chain display */
+.chainDisplay {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  font-size: 0.85rem;
+  line-height: 2;
+  margin-bottom: 0.85rem;
+  word-break: break-word;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.chainStart {
+  color: #78c4a0;
+  font-weight: 600;
+}
+
+.chainMid {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.chainEnd {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.chainEndMiss {
+  color: #c4687a;
+  font-weight: 600;
+}
+
+.chainArrow {
+  color: var(--text-muted);
+  opacity: 0.5;
+  padding: 0 0.25rem;
+}
+
+/* Fact block */
+.fact {
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-dim2, rgba(201, 169, 110, 0.2));
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+/* Stats grid */
+.scores {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.statBox {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+}
+
+.statN {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.statL {
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Share block */
+.shareBox {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  font-family: monospace;
+  font-size: 0.88rem;
+  line-height: 1.8;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.85rem;
+  user-select: all;
+  white-space: pre-wrap;
+  word-break: break-word;
+  cursor: text;
+}
+
+.copyBtn {
+  width: 100%;
+  background: var(--accent);
+  color: #100d06;
+  border: none;
+  border-radius: 8px;
+  padding: 0 1.25rem;
+  height: 48px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.copyBtn:hover {
+  opacity: 0.88;
+}
+
+.copyBtn:active {
+  transform: scale(0.97);
+}
+
+.copyBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.copiedMsg {
+  font-size: 0.78rem;
+  color: #78c4a0;
+  min-height: 18px;
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+/* Next puzzle button row */
+.nextRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+.nextBtn {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border2);
+  border-radius: 2rem;
+  padding: 0.4rem 1.4rem;
+  min-height: 48px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nextBtn:hover {
+  color: var(--text-soft);
+  border-color: var(--accent);
+}
+
+.nextBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}

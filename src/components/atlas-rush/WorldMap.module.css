@@ -1,0 +1,80 @@
+.container {
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 260px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: crosshair;
+}
+
+.country {
+  fill: var(--surface2);
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 0.5;
+  transition: fill 0.12s;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.country:hover,
+.country:focus-visible {
+  fill: var(--accent);
+  stroke: var(--accent);
+  opacity: 0.85;
+}
+
+.countryWrong {
+  fill: rgba(196, 104, 122, 0.45);
+  stroke: rgba(196, 104, 122, 0.7);
+  stroke-width: 0.5;
+  cursor: default;
+}
+
+.countryCorrect {
+  fill: rgba(120, 196, 160, 0.6);
+  stroke: rgba(120, 196, 160, 0.85);
+  stroke-width: 1;
+  cursor: default;
+}
+
+.tooltip {
+  position: absolute;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 10;
+  transform: translate(-50%, -110%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 0.5rem 0 0.75rem;
+  letter-spacing: 0.02em;
+}

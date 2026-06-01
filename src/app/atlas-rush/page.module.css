@@ -1,0 +1,22 @@
+/* Per-game accent override — AtlasRush: steel blue */
+.page {
+  --accent: #7eb8d4;
+  --accent-dim: rgba(126, 184, 212, 0.10);
+  --accent-dim2: rgba(126, 184, 212, 0.20);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding-left: max(var(--pad, clamp(1rem, 4vw, 1.5rem)), env(safe-area-inset-left));
+  padding-right: max(var(--pad, clamp(1rem, 4vw, 1.5rem)), env(safe-area-inset-right));
+  padding-bottom: max(4rem, env(safe-area-inset-bottom));
+}
+
+.main {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

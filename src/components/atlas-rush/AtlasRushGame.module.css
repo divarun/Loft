@@ -1,0 +1,670 @@
+/* ── GAME WRAP ── */
+.gameWrap {
+  width: 100%;
+  max-width: 580px;
+  min-width: 0;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 0 2rem;
+}
+
+/* ── MODE ROW ── */
+.modeRow {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+
+.modeBtn {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 2rem;
+  padding: 0 1.25rem;
+  min-height: 44px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--sans);
+  color: var(--text-muted);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.modeBtn:hover {
+  color: var(--text-soft);
+  background: var(--surface2);
+}
+
+.modeBtnActive {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.modeBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ── DAILY BADGE ── */
+.dailyBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.03em;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-dim2);
+  border-radius: 2rem;
+  padding: 0.4rem 1rem;
+  margin-bottom: 1rem;
+  width: fit-content;
+}
+
+.dailyNum {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+/* ── DAILY DONE BANNER ── */
+.dailyDoneBanner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius, 12px);
+  padding: 1.25rem;
+  text-align: center;
+  margin-bottom: 1.25rem;
+  width: 100%;
+}
+
+.dailyDoneTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.dailyDoneHint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ── DIFFICULTY ROW ── */
+.diffRow {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.1rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.diffBtn {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 2rem;
+  padding: 0 1rem;
+  min-height: 44px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--sans);
+  color: var(--text-muted);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.diffBtn:hover { color: var(--text-soft); background: var(--surface2); }
+
+.diffBtnEasy {
+  color: var(--success, #78c4a0);
+  border-color: var(--success, #78c4a0);
+  background: var(--success-dim, rgba(120,196,160,0.12));
+}
+
+.diffBtnMedium {
+  color: var(--warn, #c4a46e);
+  border-color: var(--warn, #c4a46e);
+  background: var(--warn-dim, rgba(196,164,110,0.12));
+}
+
+.diffBtnHard {
+  color: var(--danger, #c4687a);
+  border-color: var(--danger, #c4687a);
+  background: var(--danger-dim, rgba(196,104,122,0.12));
+}
+
+.diffBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ── INPUT MODE ROW ── */
+.inputModeRow {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.85rem;
+  width: 100%;
+}
+
+.inputModeBtn {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 2rem;
+  padding: 0 0.9rem;
+  min-height: 36px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: var(--sans);
+  color: var(--text-muted);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.inputModeBtn:hover { color: var(--text-soft); background: var(--surface2); }
+.inputModeBtnActive {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.inputModeBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.75rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar { display: none; }
+
+.tabBtn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 0.65rem 1.1rem;
+  margin-bottom: -1px;
+  min-height: 44px;
+  transition: color 0.15s, border-color 0.15s;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tabBtn:hover { color: var(--text-soft); }
+.tabBtnActive { color: var(--accent); border-bottom-color: var(--accent); }
+.tabBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* ── SCORE BAR ── */
+.scoreBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.1rem;
+  width: 100%;
+}
+
+.scoreLeft {}
+.scoreLabel {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.scoreVal {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 300;
+  line-height: 1;
+  transition: color 0.4s;
+}
+
+.scoreHigh     { color: var(--success, #78c4a0); }
+.scoreMid      { color: var(--accent); }
+.scoreLow      { color: var(--warn, #c4a46e); }
+.scoreCritical { color: var(--danger, #c4687a); }
+
+@keyframes popDown {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.18) translateY(-2px); }
+  60%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+.scoreValAnim { animation: popDown 0.3s ease-out; }
+
+.clueCounter {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-align: right;
+  line-height: 1.4;
+}
+.clueCounter strong { color: var(--text-soft); font-weight: 600; }
+
+/* ── PROGRESS DOTS ── */
+.progressRow {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  margin-bottom: 1.4rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+  flex-shrink: 0;
+}
+.dotUsed   { background: var(--danger, #c4687a);  border-color: var(--danger, #c4687a); }
+.dotActive { background: var(--warn, #c4a46e);    border-color: var(--warn, #c4a46e);   transform: scale(1.35); }
+.dotWin    { background: var(--success, #78c4a0); border-color: var(--success, #78c4a0); }
+
+/* ── CLUE CARDS ── */
+.cluesStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  width: 100%;
+}
+
+.clueCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 12px);
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  animation: slideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.clueCardFirst { border-color: var(--accent-dim2); }
+
+.clueTypeFlag     { border-left: 3px solid rgba(126,184,212,0.4); }
+.clueTypeShape    { border-left: 3px solid rgba(196,164,110,0.4); }
+.clueTypeCapital  { border-left: 3px solid rgba(120,196,160,0.3); }
+.clueTypeBorders  { border-left: 3px solid rgba(196,104,122,0.3); }
+.clueTypePop      { border-left: 3px solid rgba(160,126,212,0.3); }
+.clueTypeHint     { border-left: 3px solid rgba(212,196,126,0.3); }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.clueIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  color: var(--text-soft);
+}
+
+.clueContent { flex: 1; min-width: 0; overflow: hidden; }
+
+.clueLabel {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.clueValue {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.clueFlagImg {
+  width: 72px;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  display: block;
+  max-width: 100%;
+}
+
+/* Shape canvas */
+.shapeCanvas {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  border-radius: var(--radius-sm, 8px);
+  background: var(--bg);
+}
+
+.shapeLoading {
+  width: 100%;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shapeLoadingDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* ── LOCKED PILLS ── */
+.lockedRow {
+  display: flex;
+  gap: 0.45rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.lockedPill {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* ── HINT ROW ── */
+.hintRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.hintLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.costBadge {
+  font-size: 0.68rem;
+  color: var(--warn, #c4a46e);
+  font-weight: 500;
+}
+
+.btnGhost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border2);
+  border-radius: 2rem;
+  padding: 0 1rem;
+  min-height: 44px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.btnGhost:hover { color: var(--text-soft); background: var(--surface2); }
+.btnGhost:disabled { opacity: 0.35; cursor: not-allowed; }
+.btnGhost:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.btnSkip { margin-left: auto; }
+
+/* ── STREAK PILL ── */
+.streakPill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-dim2);
+  border-radius: 2rem;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+  min-height: 44px;
+  transition: background 0.3s, border-color 0.3s, color 0.3s;
+  flex-shrink: 0;
+}
+
+.streakPillHot {
+  background: rgba(196, 164, 110, 0.15);
+  border-color: rgba(196, 164, 110, 0.3);
+  color: var(--warn, #c4a46e);
+}
+
+/* ── HOW TO PLAY ── */
+.howList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.howItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 8px);
+  padding: 0.85rem 1rem;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.howNum {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.78rem;
+  flex-shrink: 0;
+}
+
+.howText {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.howText strong { color: var(--text-soft); font-weight: 600; }
+
+/* ── SCORES LIST ── */
+.scoresList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.scoresEmpty {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.scoreRow {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 8px);
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 0.75rem;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.scoreRowLoss { border-color: rgba(196, 104, 122, 0.2); }
+
+.scoreRowLeft {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  gap: 0.6rem;
+}
+
+.scoreRowFlag { font-size: 1.1rem; flex-shrink: 0; }
+
+.scoreRowInfo {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.scoreRowName {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scoreRowClues {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+.scoreRowRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.scoreRowScore {
+  font-family: var(--serif);
+  color: var(--accent);
+  font-size: 1.2rem;
+  font-weight: 300;
+  white-space: nowrap;
+}
+
+.scoreRowScoreLoss { color: var(--danger, #c4687a); }
+
+/* Difficulty badge */
+.diffBadge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 2rem;
+  border: 1px solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.diffBadgeEasy   { color: var(--success, #78c4a0); border-color: var(--success, #78c4a0); background: rgba(120,196,160,0.12); }
+.diffBadgeMedium { color: var(--warn, #c4a46e);    border-color: var(--warn, #c4a46e);    background: rgba(196,164,110,0.12); }
+.diffBadgeHard   { color: var(--danger, #c4687a);  border-color: var(--danger, #c4687a);  background: rgba(196,104,122,0.12); }
+.diffBadgeDaily  { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+
+/* ── SCREEN READER ONLY ── */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── MEDIA ── */
+@media (max-width: 480px) {
+  .scoreVal { font-size: 1.8rem; }
+  .hintRow { gap: 0.4rem; }
+  .btnSkip { margin-left: 0; }
+  .diffRow { gap: 0.3rem; }
+  .shapeCanvas { max-height: 170px; }
+}
+
+@media (max-width: 360px) {
+  .scoreVal { font-size: 1.5rem; }
+  .hintRow { flex-direction: column; align-items: flex-start; }
+  .btnSkip { margin-left: 0; }
+}

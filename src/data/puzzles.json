@@ -1,0 +1,474 @@
+[
+  {
+    "id": 1,
+    "difficulty": "easy",
+    "start": "Shark",
+    "target": "Beatles",
+    "steps": [
+      { "correct": "Ocean",   "options": ["Ocean","Teeth","Reef","Jaws"],    "explain": "Sharks live in the ocean." },
+      { "correct": "Sound",   "options": ["Sound","Depth","Current","Tide"], "explain": "Sound travels uniquely far through ocean water." },
+      { "correct": "Music",   "options": ["Music","Echo","Noise","Pitch"],   "explain": "Sound is the medium of music." },
+      { "correct": "Beatles", "options": ["Beatles","Guitar","Band","Song"],  "explain": "The Beatles are one of the greatest music acts in history." }
+    ],
+    "fact": "Sharks roam the ocean, where sound travels uniquely far — connecting acoustics to music, and the Fab Four."
+  },
+  {
+    "id": 2,
+    "difficulty": "easy",
+    "start": "Apple",
+    "target": "Gravity",
+    "steps": [
+      { "correct": "Newton",  "options": ["Newton","Orchard","Cider","Fruit"],    "explain": "A falling apple inspired Isaac Newton." },
+      { "correct": "Gravity", "options": ["Gravity","Science","Force","Law"],     "explain": "Newton's greatest discovery was the law of gravity." }
+    ],
+    "fact": "A falling apple inspired Isaac Newton to formulate the universal law of gravitation."
+  },
+  {
+    "id": 3,
+    "difficulty": "easy",
+    "start": "Tree",
+    "target": "Book",
+    "steps": [
+      { "correct": "Wood",  "options": ["Wood","Leaf","Root","Shade"],       "explain": "Trees are made of wood." },
+      { "correct": "Paper", "options": ["Paper","Timber","Fire","Furniture"],"explain": "Wood pulp is pressed into paper." },
+      { "correct": "Book",  "options": ["Book","Write","Pen","Page"],        "explain": "Paper is what books are made of." }
+    ],
+    "fact": "Trees are felled for wood, processed into pulp, pressed into paper — the raw material of every book."
+  },
+  {
+    "id": 4,
+    "difficulty": "medium",
+    "start": "Lightning",
+    "target": "Computer",
+    "steps": [
+      { "correct": "Electricity", "options": ["Electricity","Thunder","Storm","Flash"],   "explain": "Lightning is a massive discharge of electricity." },
+      { "correct": "Circuit",     "options": ["Circuit","Light","Battery","Power"],       "explain": "Electricity flows through circuits." },
+      { "correct": "Computer",    "options": ["Computer","Wire","Chip","Signal"],         "explain": "Circuits are the heart of every computer." }
+    ],
+    "fact": "Lightning is raw electricity — harness it into circuits, and you have the heart of every computer."
+  },
+  {
+    "id": 5,
+    "difficulty": "easy",
+    "start": "Camera",
+    "target": "Memory",
+    "steps": [
+      { "correct": "Photograph", "options": ["Photograph","Lens","Flash","Film"],  "explain": "A camera captures photographs." },
+      { "correct": "Memory",     "options": ["Memory","Album","Print","Frame"],    "explain": "Photographs are how we preserve memories." }
+    ],
+    "fact": "A camera freezes a moment into a photograph — and photographs are how humans preserve memories."
+  },
+  {
+    "id": 6,
+    "difficulty": "medium",
+    "start": "Compass",
+    "target": "Trade",
+    "steps": [
+      { "correct": "Navigation", "options": ["Navigation","Needle","Magnet","Map"],      "explain": "A compass enables navigation." },
+      { "correct": "Trade",      "options": ["Trade","Ocean","Route","Sailing"],         "explain": "Navigation opened sea trade routes." }
+    ],
+    "fact": "The compass made accurate navigation possible, opening sea routes and centuries of global trade."
+  },
+  {
+    "id": 7,
+    "difficulty": "easy",
+    "start": "Feather",
+    "target": "Airplane",
+    "steps": [
+      { "correct": "Flight",   "options": ["Flight","Quill","Bird","Pillow"],   "explain": "Feathers give birds the ability of flight." },
+      { "correct": "Airplane", "options": ["Airplane","Sky","Wing","Air"],      "explain": "Airplanes are humanity's mastery of flight." }
+    ],
+    "fact": "Birds' feathers inspired the dream of human flight — a dream the Wright Brothers made real in 1903."
+  },
+  {
+    "id": 8,
+    "difficulty": "easy",
+    "start": "Wind",
+    "target": "Electricity",
+    "steps": [
+      { "correct": "Turbine",     "options": ["Turbine","Breeze","Storm","Sail"],         "explain": "Wind spins turbine blades." },
+      { "correct": "Electricity", "options": ["Electricity","Spin","Engine","Blade"],     "explain": "Spinning turbines generate electricity." }
+    ],
+    "fact": "Wind spins turbine blades; spinning turbines generate electricity — the basis of all wind farms."
+  },
+  {
+    "id": 9,
+    "difficulty": "hard",
+    "start": "Bread",
+    "target": "Revolution",
+    "steps": [
+      { "correct": "Hunger",     "options": ["Hunger","Wheat","Bake","Toast"],        "explain": "Bread shortages caused mass hunger." },
+      { "correct": "Uprising",   "options": ["Uprising","Poverty","Food","Famine"],   "explain": "Hunger drove desperate uprisings." },
+      { "correct": "Revolution", "options": ["Revolution","Protest","Revolt","Change"],"explain": "Uprisings escalated into full revolutions." }
+    ],
+    "fact": "Bread shortages caused hunger, hunger drove uprisings, and uprisings toppled regimes — from Paris 1789 onward."
+  },
+  {
+    "id": 10,
+    "difficulty": "medium",
+    "start": "Moon",
+    "target": "Pizza",
+    "steps": [
+      { "correct": "Harvest", "options": ["Harvest","Night","Crater","Stars"],   "explain": "The Harvest Moon lit farmers' fields at night." },
+      { "correct": "Grain",   "options": ["Grain","Autumn","Festival","Farm"],   "explain": "Farmers harvested grain by moonlight." },
+      { "correct": "Pizza",   "options": ["Pizza","Bread","Flour","Wheat"],      "explain": "Grain ground into flour makes pizza dough." }
+    ],
+    "fact": "The Harvest Moon lit fields for farmers; grain is their crop; and grain, ground to flour, gives us pizza dough."
+  },
+  {
+    "id": 11,
+    "difficulty": "hard",
+    "start": "Shakespeare",
+    "target": "Submarine",
+    "steps": [
+      { "correct": "Sea",       "options": ["Sea","Theatre","Drama","England"],    "explain": "Shakespeare's plays are filled with the sea." },
+      { "correct": "Depth",     "options": ["Depth","Wave","Sailor","Storm"],      "explain": "The ocean's depths fascinated explorers." },
+      { "correct": "Submarine", "options": ["Submarine","Pressure","Dive","Dark"], "explain": "Exploring depths led to the invention of submarines." }
+    ],
+    "fact": "Shakespeare's plays are filled with the sea and its mysteries; the ocean's depths fascinated explorers who built the submarine."
+  },
+  {
+    "id": 12,
+    "difficulty": "hard",
+    "start": "Penguin",
+    "target": "Pyramid",
+    "steps": [
+      { "correct": "Ice",     "options": ["Ice","Antarctica","Swim","Tuxedo"],    "explain": "Penguins live on ice sheets." },
+      { "correct": "Glacier", "options": ["Glacier","Snow","Freeze","Cold"],      "explain": "Ice forms glaciers that grind rock." },
+      { "correct": "Stone",   "options": ["Stone","Water","Melt","Valley"],       "explain": "Glaciers grind mountains into stone." },
+      { "correct": "Pyramid", "options": ["Pyramid","Rock","Wall","Monument"],    "explain": "Massive stones were stacked to build pyramids." }
+    ],
+    "fact": "Penguins live on ice; glaciers grind mountains into stone; and massive stones, stacked by hand, became the pyramids."
+  },
+  {
+    "id": 13,
+    "difficulty": "hard",
+    "start": "Coffee",
+    "target": "Satellite",
+    "steps": [
+      { "correct": "Trade",      "options": ["Trade","Bean","Brew","Cup"],          "explain": "Coffee drove global trade routes." },
+      { "correct": "Navigation", "options": ["Navigation","Route","Commerce","Market"],"explain": "Trade demanded precise navigation." },
+      { "correct": "Satellite",  "options": ["Satellite","Map","Compass","GPS"],    "explain": "Modern navigation is delivered by satellites." }
+    ],
+    "fact": "Coffee drove the Age of Exploration trade routes, which demanded precise navigation — eventually delivered by satellites."
+  },
+  {
+    "id": 14,
+    "difficulty": "medium",
+    "start": "Forest",
+    "target": "Medicine",
+    "steps": [
+      { "correct": "Plants",   "options": ["Plants","Trees","Animals","Oxygen"],   "explain": "Forests are full of plant species." },
+      { "correct": "Herbs",    "options": ["Herbs","Leaves","Growth","Food"],      "explain": "Many forest plants are medicinal herbs." },
+      { "correct": "Medicine", "options": ["Medicine","Tea","Spice","Remedy"],     "explain": "Herbs are the world's oldest source of medicine." }
+    ],
+    "fact": "Forests harbour thousands of plant species; many are medicinal herbs — the world's oldest pharmacy."
+  },
+  {
+    "id": 15,
+    "difficulty": "hard",
+    "start": "Rain",
+    "target": "Democracy",
+    "steps": [
+      { "correct": "River",        "options": ["River","Cloud","Storm","Flood"],          "explain": "Rain fills rivers." },
+      { "correct": "Civilization", "options": ["Civilization","Water","Fish","Trade"],    "explain": "Rivers nurtured ancient civilizations." },
+      { "correct": "Democracy",    "options": ["Democracy","Culture","Law","City"],       "explain": "Ancient civilizations gave us early democracy." }
+    ],
+    "fact": "Rain feeds rivers; rivers nurtured the ancient civilizations that gave us early democracy in Greece."
+  },
+  {
+    "id": 16,
+    "difficulty": "easy",
+    "start": "Seed",
+    "target": "Ecosystem",
+    "steps": [
+      { "correct": "Plant",     "options": ["Plant","Soil","Growth","Pod"],         "explain": "A seed grows into a plant." },
+      { "correct": "Animals",   "options": ["Animals","Oxygen","Food","Garden"],    "explain": "Plants sustain animals." },
+      { "correct": "Ecosystem", "options": ["Ecosystem","Habitat","Nature","Wild"], "explain": "Plants and animals together form an ecosystem." }
+    ],
+    "fact": "A seed grows into a plant; plants sustain animals; that web of plants and animals is an ecosystem."
+  },
+  {
+    "id": 17,
+    "difficulty": "easy",
+    "start": "Paint",
+    "target": "Emotion",
+    "steps": [
+      { "correct": "Art",     "options": ["Art","Color","Brush","Wall"],           "explain": "Paint is the artist's primary tool." },
+      { "correct": "Emotion", "options": ["Emotion","Beauty","Culture","Museum"],  "explain": "Art's deepest purpose is to express emotion." }
+    ],
+    "fact": "Paint is the artist's tool; art's deepest purpose has always been to express and stir human emotion."
+  },
+  {
+    "id": 18,
+    "difficulty": "hard",
+    "start": "Violin",
+    "target": "Computer",
+    "steps": [
+      { "correct": "Frequency",   "options": ["Frequency","String","Music","Bow"],          "explain": "Violin strings vibrate at precise frequencies." },
+      { "correct": "Mathematics", "options": ["Mathematics","Wave","Pitch","Signal"],        "explain": "Frequency is a mathematical quantity." },
+      { "correct": "Computer",    "options": ["Computer","Numbers","Logic","Science"],       "explain": "Mathematics is the language of computers." }
+    ],
+    "fact": "Violin strings vibrate at precise frequencies; frequency is mathematical; and mathematics is the language of computers."
+  },
+  {
+    "id": 19,
+    "difficulty": "medium",
+    "start": "Key",
+    "target": "Encryption",
+    "steps": [
+      { "correct": "Code",       "options": ["Code","Lock","Door","Metal"],           "explain": "A key is used to unlock a coded lock." },
+      { "correct": "Encryption", "options": ["Encryption","Program","Secret","Message"],"explain": "Digital keys lock and unlock data via encryption." }
+    ],
+    "fact": "A key unlocks — in cryptography, a digital key is the mechanism that locks or unlocks data through encryption."
+  },
+  {
+    "id": 20,
+    "difficulty": "medium",
+    "start": "Map",
+    "target": "Satellite",
+    "steps": [
+      { "correct": "GPS",       "options": ["GPS","Route","Geography","Atlas"],     "explain": "Digital maps rely on GPS." },
+      { "correct": "Satellite", "options": ["Satellite","Signal","Location","Space"],"explain": "GPS signals are broadcast by satellites." }
+    ],
+    "fact": "Maps became digital; digital maps rely on GPS; GPS signals are broadcast by satellites orbiting Earth."
+  },
+  {
+    "id": 21,
+    "difficulty": "easy",
+    "start": "Horse",
+    "target": "Car",
+    "steps": [
+      { "correct": "Transport", "options": ["Transport","Rider","Speed","Stable"],  "explain": "Horses were the main form of transport for millennia." },
+      { "correct": "Car",       "options": ["Car","Vehicle","Travel","Road"],       "explain": "The car replaced the horse as personal transport." }
+    ],
+    "fact": "Horses were humanity's engine for millennia — the 'horseless carriage' quite literally replaced them."
+  },
+  {
+    "id": 22,
+    "difficulty": "medium",
+    "start": "Mirror",
+    "target": "Laser",
+    "steps": [
+      { "correct": "Light", "options": ["Light","Reflection","Glass","Image"],   "explain": "Mirrors bounce and direct light." },
+      { "correct": "Laser", "options": ["Laser","Beam","Speed","Ray"],           "explain": "A laser is amplified, focused light." }
+    ],
+    "fact": "Mirrors bounce light; control light precisely enough — amplify and focus it — and you have a laser."
+  },
+  {
+    "id": 23,
+    "difficulty": "medium",
+    "start": "Clock",
+    "target": "Ocean",
+    "steps": [
+      { "correct": "Navigation", "options": ["Navigation","Time","Tick","Watch"],    "explain": "Accurate clocks solved the longitude problem for sailors." },
+      { "correct": "Ocean",      "options": ["Ocean","Route","Compass","Sailing"],   "explain": "Sailors could now confidently cross any ocean." }
+    ],
+    "fact": "Accurate marine clocks solved the longitude problem, giving sailors the tools to confidently cross any ocean."
+  },
+  {
+    "id": 24,
+    "difficulty": "medium",
+    "start": "Magnet",
+    "target": "Train",
+    "steps": [
+      { "correct": "Levitation", "options": ["Levitation","Iron","Field","Force"],   "explain": "Strong magnets can levitate objects." },
+      { "correct": "Train",      "options": ["Train","Float","Speed","Rail"],        "explain": "Magnetic levitation powers maglev trains." }
+    ],
+    "fact": "Magnets repel as well as attract — powerful magnetic repulsion lifts maglev trains off the rails entirely."
+  },
+  {
+    "id": 25,
+    "difficulty": "easy",
+    "start": "Rainbow",
+    "target": "Prism",
+    "steps": [
+      { "correct": "Light",  "options": ["Light","Color","Rain","Arc"],   "explain": "Raindrops split sunlight into a rainbow spectrum." },
+      { "correct": "Prism",  "options": ["Prism","Beam","Speed","Ray"],   "explain": "A glass prism splits light the same way." }
+    ],
+    "fact": "Raindrops split sunlight into a rainbow's spectrum; a glass prism does exactly the same thing."
+  },
+  {
+    "id": 26,
+    "difficulty": "medium",
+    "start": "Newspaper",
+    "target": "Television",
+    "steps": [
+      { "correct": "News",       "options": ["News","Print","Press","Story"],           "explain": "Newspapers established the daily news habit." },
+      { "correct": "Broadcast",  "options": ["Broadcast","Radio","Reporter","Headline"],"explain": "News moved from print to radio broadcast." },
+      { "correct": "Television", "options": ["Television","Antenna","Channel","Screen"],"explain": "Broadcast news evolved into television." }
+    ],
+    "fact": "Newspapers established the habit of daily news; broadcasting extended it to radio, then to television."
+  },
+  {
+    "id": 27,
+    "difficulty": "easy",
+    "start": "River",
+    "target": "Hydropower",
+    "steps": [
+      { "correct": "Dam",        "options": ["Dam","Current","Bank","Fish"],         "explain": "A dam blocks and controls a river's flow." },
+      { "correct": "Hydropower", "options": ["Hydropower","Water","Block","Power"],  "explain": "Dams convert river flow into hydroelectric power." }
+    ],
+    "fact": "A dam harnesses the kinetic energy of river water, converting its flow into hydroelectric power."
+  },
+  {
+    "id": 28,
+    "difficulty": "easy",
+    "start": "Sun",
+    "target": "Vitamin",
+    "steps": [
+      { "correct": "Light", "options": ["Light","Heat","Star","Sky"],          "explain": "The sun emits light." },
+      { "correct": "Skin",  "options": ["Skin","Tan","Burn","Glow"],           "explain": "Sunlight hits our skin." },
+      { "correct": "Vitamin", "options": ["Vitamin","Health","Bone","Calcium"],"explain": "Sunlight triggers vitamin D production in skin." }
+    ],
+    "fact": "Sunlight triggers the synthesis of vitamin D in human skin — the only vitamin your body can make itself."
+  },
+  {
+    "id": 29,
+    "difficulty": "medium",
+    "start": "Volcano",
+    "target": "Soil",
+    "steps": [
+      { "correct": "Lava",     "options": ["Lava","Eruption","Fire","Magma"],     "explain": "Volcanoes produce lava when they erupt." },
+      { "correct": "Rock",     "options": ["Rock","Ash","Stone","Mineral"],       "explain": "Cooled lava hardens into volcanic rock." },
+      { "correct": "Soil",     "options": ["Soil","Sand","Earth","Dust"],         "explain": "Volcanic rock weathers over time into fertile soil." }
+    ],
+    "fact": "Volcanic eruptions produce lava that cools into rock — and over centuries, volcanic rock weathers into some of the world's most fertile soil."
+  },
+  {
+    "id": 30,
+    "difficulty": "hard",
+    "start": "Silk",
+    "target": "Internet",
+    "steps": [
+      { "correct": "Road",    "options": ["Road","Thread","Worm","Fabric"],      "explain": "Silk gave its name to the ancient trade road." },
+      { "correct": "Trade",   "options": ["Trade","Journey","Merchant","Spice"], "explain": "The Silk Road was a vast trade network." },
+      { "correct": "Network", "options": ["Network","Exchange","Route","Link"],  "explain": "Trade routes were the original global network." },
+      { "correct": "Internet","options": ["Internet","Server","Data","Cable"],   "explain": "The internet is the modern global network." }
+    ],
+    "fact": "The Silk Road was humanity's first global network for exchanging goods and ideas — a forerunner of the internet."
+  },
+  {
+    "id": 31,
+    "difficulty": "hard",
+    "start": "Ice",
+    "target": "Whiskey",
+    "steps": [
+      { "correct": "Mountain", "options": ["Mountain","Snow","Cold","Freeze"],      "explain": "High-altitude ice caps the world's mountains." },
+      { "correct": "Stream",   "options": ["Stream","Melt","Glacier","Flow"],       "explain": "Melting mountain ice feeds streams." },
+      { "correct": "Water",    "options": ["Water","River","Spring","Pure"],        "explain": "Streams carry pure mountain water." },
+      { "correct": "Whiskey",  "options": ["Whiskey","Distill","Grain","Barrel"],   "explain": "Clean water is the essential ingredient in whiskey." }
+    ],
+    "fact": "The purest whiskies trace their character to the clean mountain water used in distillation — ice melts, streams flow, whiskey pours."
+  },
+  {
+    "id": 32,
+    "difficulty": "medium",
+    "start": "Fire",
+    "target": "City",
+    "steps": [
+      { "correct": "Cooking",  "options": ["Cooking","Warmth","Wood","Smoke"],     "explain": "Fire enabled cooking food." },
+      { "correct": "Settlement","options": ["Settlement","Food","Tribe","Village"], "explain": "Reliable food from cooking allowed permanent settlements." },
+      { "correct": "City",     "options": ["City","Town","Building","Culture"],    "explain": "Settlements grew into cities." }
+    ],
+    "fact": "Fire enabled cooking, which provided stable nutrition — freeing early humans to settle and build the first cities."
+  },
+  {
+    "id": 33,
+    "difficulty": "easy",
+    "start": "Cloud",
+    "target": "River",
+    "steps": [
+      { "correct": "Rain",  "options": ["Rain","Sky","Thunder","Fog"],    "explain": "Clouds release rain." },
+      { "correct": "River", "options": ["River","Puddle","Flood","Lake"], "explain": "Rain gathers and flows into rivers." }
+    ],
+    "fact": "Clouds are water vapour; rain falls from them; and rain collects in streams that grow into rivers."
+  },
+  {
+    "id": 34,
+    "difficulty": "medium",
+    "start": "Star",
+    "target": "Calendar",
+    "steps": [
+      { "correct": "Astronomy", "options": ["Astronomy","Shine","Night","Light"],    "explain": "Stars are studied through astronomy." },
+      { "correct": "Season",    "options": ["Season","Orbit","Telescope","Galaxy"],  "explain": "Astronomers tracked stars to determine seasons." },
+      { "correct": "Calendar",  "options": ["Calendar","Year","Harvest","Cycle"],    "explain": "Tracking seasons gave us the calendar." }
+    ],
+    "fact": "Ancient peoples tracked stars to find seasonal patterns — those patterns became the first calendars."
+  },
+  {
+    "id": 35,
+    "difficulty": "hard",
+    "start": "Bone",
+    "target": "Piano",
+    "steps": [
+      { "correct": "Flute",   "options": ["Flute","Marrow","Fossil","Calcium"],   "explain": "The oldest musical instruments were bone flutes." },
+      { "correct": "Music",   "options": ["Music","Sound","Notes","Melody"],      "explain": "Flutes make music." },
+      { "correct": "Keys",    "options": ["Keys","Song","Harmony","Rhythm"],      "explain": "Keyboard music is played on keys." },
+      { "correct": "Piano",   "options": ["Piano","Ivory","Strings","Concert"],   "explain": "Piano keys were once made from bone (ivory)." }
+    ],
+    "fact": "The oldest instruments were bone flutes; eventually music evolved into keyboard instruments whose keys were once made from ivory."
+  },
+  {
+    "id": 36,
+    "difficulty": "easy",
+    "start": "Honey",
+    "target": "Candle",
+    "steps": [
+      { "correct": "Bee",    "options": ["Bee","Sweet","Jar","Flower"],      "explain": "Honey is made by bees." },
+      { "correct": "Wax",    "options": ["Wax","Hive","Sting","Wing"],       "explain": "Bees also produce beeswax." },
+      { "correct": "Candle", "options": ["Candle","Light","Melt","Flame"],   "explain": "Beeswax is the original candle material." }
+    ],
+    "fact": "Bees make both honey and beeswax — and beeswax candles have been humanity's light source for thousands of years."
+  },
+  {
+    "id": 37,
+    "difficulty": "medium",
+    "start": "Sand",
+    "target": "Internet",
+    "steps": [
+      { "correct": "Silicon",  "options": ["Silicon","Glass","Beach","Desert"],   "explain": "Sand is mostly silicon dioxide." },
+      { "correct": "Chip",     "options": ["Chip","Crystal","Wire","Metal"],      "explain": "Silicon is refined into microchips." },
+      { "correct": "Internet", "options": ["Internet","Computer","Data","Code"],  "explain": "Microchips power computers and the internet." }
+    ],
+    "fact": "Ordinary beach sand contains silicon dioxide — refined into silicon wafers that become the microchips powering the internet."
+  },
+  {
+    "id": 38,
+    "difficulty": "hard",
+    "start": "Egg",
+    "target": "Empire",
+    "steps": [
+      { "correct": "Chicken",     "options": ["Chicken","Shell","Nest","Yolk"],       "explain": "Eggs hatch into chickens." },
+      { "correct": "Agriculture", "options": ["Agriculture","Farm","Feed","Flock"],   "explain": "Raising chickens was an early form of agriculture." },
+      { "correct": "Surplus",     "options": ["Surplus","Food","Grain","Harvest"],    "explain": "Agriculture created food surpluses." },
+      { "correct": "Empire",      "options": ["Empire","Power","Army","Trade"],       "explain": "Food surpluses funded armies and built empires." }
+    ],
+    "fact": "Domesticating animals created food surpluses — surpluses funded armies, and armies built empires."
+  },
+  {
+    "id": 39,
+    "difficulty": "easy",
+    "start": "Snow",
+    "target": "Avalanche",
+    "steps": [
+      { "correct": "Mountain",  "options": ["Mountain","Melt","Ice","Cold"],       "explain": "Snow accumulates on mountains." },
+      { "correct": "Weight",    "options": ["Weight","Slope","Freeze","Powder"],   "explain": "Snow builds up immense weight on slopes." },
+      { "correct": "Avalanche", "options": ["Avalanche","Fall","Slide","Tumble"],  "explain": "Too much weight causes a snow avalanche." }
+    ],
+    "fact": "Snow packs onto mountain slopes; once enough weight accumulates, the whole mass slides down as an avalanche."
+  },
+  {
+    "id": 40,
+    "difficulty": "hard",
+    "start": "Ink",
+    "target": "Revolution",
+    "steps": [
+      { "correct": "Print",      "options": ["Print","Write","Pen","Stain"],           "explain": "Ink is used for printing." },
+      { "correct": "Pamphlet",   "options": ["Pamphlet","Book","Press","Newspaper"],   "explain": "Printing enabled cheap political pamphlets." },
+      { "correct": "Propaganda", "options": ["Propaganda","Idea","Speech","Protest"],  "explain": "Pamphlets spread political propaganda rapidly." },
+      { "correct": "Revolution", "options": ["Revolution","Change","Riot","War"],      "explain": "Propaganda fuelled revolutions across history." }
+    ],
+    "fact": "Ink enabled printing, printing made pamphlets cheap, and pamphlets spread the radical ideas that ignited revolutions."
+  }
+]

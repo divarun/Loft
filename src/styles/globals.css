@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Instrument+Sans:wght@400;500;600&display=swap');
+
+/* ── RESET ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── DESIGN TOKENS ── */
+:root {
+  --bg:          #0f0f12;
+  --surface:     #17171d;
+  --surface2:    #1f1f27;
+  --border:      rgba(255, 255, 255, 0.08);
+  --border2:     rgba(255, 255, 255, 0.15);
+  --text:        #e8e8ee;
+  --text-soft:   #a8a8b8;
+  --text-muted:  #6a6a80;
+
+  /* Warm amber — site-wide default accent */
+  --accent:      #c9956b;
+  --accent-dim:  rgba(201, 149, 107, 0.10);
+  --accent-dim2: rgba(201, 149, 107, 0.20);
+
+  /* Typography — variables injected by next/font/google via layout.tsx */
+  --serif: var(--font-serif, 'Fraunces', Georgia, serif);
+  --sans:  var(--font-sans, 'Instrument Sans', system-ui, sans-serif);
+
+  /* Per-category badge colors */
+  --geo-bg:     rgba(100, 180, 140, 0.12);
+  --geo-color:  #78c4a0;
+  --geo-border: rgba(100, 180, 140, 0.25);
+
+  --word-bg:     rgba(180, 150, 100, 0.12);
+  --word-color:  #c4a46e;
+  --word-border: rgba(180, 150, 100, 0.25);
+
+  --arcade-bg:     rgba(180, 100, 120, 0.12);
+  --arcade-color:  #c47a8a;
+  --arcade-border: rgba(180, 100, 120, 0.25);
+
+  --stealth-bg:     rgba(120, 100, 200, 0.12);
+  --stealth-color:  #a08ae0;
+  --stealth-border: rgba(120, 100, 200, 0.25);
+
+  /* Layout */
+  --radius: 12px;
+  --max:    860px;
+  --pad:    clamp(1.25rem, 5vw, 2.5rem);
+}
+
+/* ── BASE ── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans, var(--sans));
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── SKIP LINK (accessibility) ── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--surface2);
+  color: var(--text);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  text-decoration: none;
+  z-index: 200;
+  border: 1px solid var(--border2);
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ── SCREEN-READER ONLY ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

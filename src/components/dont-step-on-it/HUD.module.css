@@ -1,0 +1,95 @@
+.hud {
+  position: fixed;
+  top: 52px;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  padding: 0.45rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.75rem;
+  background: rgba(15, 15, 18, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05rem;
+}
+
+.label {
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim, #6a6a80);
+  white-space: nowrap;
+}
+
+.value {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--accent, #4ade80);
+  line-height: 1;
+}
+
+/* Lives row */
+.livesRow {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  margin-top: 0.1rem;
+}
+
+.heart {
+  color: var(--accent, #4ade80);
+  transition: opacity 0.2s, filter 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.heartLost {
+  opacity: 0.2;
+  filter: grayscale(1);
+}
+
+/* Trap counter */
+.trapCount {
+  font-size: 0.72rem;
+  color: var(--dim, #6a6a80);
+  white-space: nowrap;
+  margin-top: 0.1rem;
+}
+
+/* Preview phase banner */
+.previewBanner {
+  width: 100%;
+  text-align: center;
+  font-size: 0.7rem;
+  color: rgba(74, 222, 128, 0.75);
+  letter-spacing: 0.07em;
+  animation: previewPulse 1s ease-in-out infinite alternate;
+  padding-top: 0.15rem;
+  padding-bottom: 0.1rem;
+}
+
+@keyframes previewPulse {
+  from { opacity: 0.6; }
+  to   { opacity: 1;   }
+}
+
+/* Compact on very small screens */
+@media (max-width: 380px) {
+  .hud {
+    gap: 1.1rem;
+  }
+  .value {
+    font-size: 1.2rem;
+  }
+}

@@ -1,0 +1,38 @@
+# ── Dependencies ──────────────────────────────────────────────────────────────
+node_modules/
+
+# ── Next.js ───────────────────────────────────────────────────────────────────
+.next/
+out/
+
+# ── TypeScript ────────────────────────────────────────────────────────────────
+*.tsbuildinfo
+next-env.d.ts
+
+# ── Environment variables ─────────────────────────────────────────────────────
+# Commit .env.local.example (the template), never the real files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ── Vercel ────────────────────────────────────────────────────────────────────
+.vercel/
+
+# ── OS / Editor ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/settings.json
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
+*.log
+.cache/
+
+# ── Vercel ────────────────────────────────────────────────────────────────────
+.claude/
+CLAUDE.md
+

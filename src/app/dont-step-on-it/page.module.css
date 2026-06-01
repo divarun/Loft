@@ -1,0 +1,6 @@
+/* Per-game accent override — Don't Step On It uses green */
+.page {
+  --accent: #4ade80;
+  --accent-dim: rgba(74, 222, 128, 0.10);
+  --accent-dim2: rgba(74, 222, 128, 0.20);
+}
