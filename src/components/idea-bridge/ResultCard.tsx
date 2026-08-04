@@ -1,11 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import type { Puzzle } from '@/types/bridge'
+import type { Puzzle, Solution } from '@/types/bridge'
 import styles from './ResultCard.module.css'
 
 interface ResultCardProps {
   puzzle: Puzzle
+  /** Intended chain + fact, fetched when the puzzle ended. Null if that fetch failed. */
+  solution: Solution | null
   chain: string[]
   score: number
   totalWrong: number
@@ -18,6 +20,7 @@ interface ResultCardProps {
 
 export default function ResultCard({
   puzzle,
+  solution,
   chain,
   score,
   totalWrong,
@@ -37,10 +40,8 @@ export default function ResultCard({
 
   const hops = chain.length - 1
 
-  // Build the "correct" chain for loss case
-  const displayChain = won
-    ? chain
-    : [puzzle.start, ...puzzle.steps.map(s => s.correct)]
+  // On a loss, show the intended path the server just handed back
+  const displayChain = won ? chain : (solution?.chain ?? chain)
 
   return (
     <section
@@ -84,7 +85,7 @@ export default function ResultCard({
       </div>
 
       {/* Fun fact */}
-      <blockquote className={styles.fact}>{puzzle.fact}</blockquote>
+      {solution?.fact && <blockquote className={styles.fact}>{solution.fact}</blockquote>}
 
       {/* Stats */}
       <div className={styles.scores}>

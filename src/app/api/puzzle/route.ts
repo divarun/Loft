@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDayNumber } from '@/lib/dayNumber'
+import { dailyIndex, DAILY_SALT } from '@/lib/dailyPick'
 import { generateAIPuzzle, getAIProvider } from '@/lib/ai'
-import puzzles from '@/data/puzzles.json'
+import {
+  curatedCount,
+  getCuratedPuzzle,
+  rememberAIPuzzle,
+  toClientPuzzle,
+} from '@/lib/puzzleStore'
+
+export const dynamic = 'force-dynamic'
 
 function randomCurated() {
-  const idx = Math.floor(Math.random() * puzzles.length)
-  return { ...puzzles[idx], source: 'curated' as const }
+  return getCuratedPuzzle(Math.floor(Math.random() * curatedCount))
 }
 
 export async function GET(req: NextRequest) {
@@ -13,21 +20,30 @@ export async function GET(req: NextRequest) {
 
   if (mode === 'daily') {
     const day = getDayNumber()
-    return NextResponse.json({ ...puzzles[day % puzzles.length], source: 'curated' })
+    return NextResponse.json(
+      toClientPuzzle(getCuratedPuzzle(dailyIndex(day, curatedCount, DAILY_SALT.ideaBridge))),
+    )
   }
 
   if (mode === 'practice') {
-    return NextResponse.json(randomCurated())
+    return NextResponse.json(toClientPuzzle(randomCurated()))
   }
 
   if (mode === 'ai') {
     // If no AI is configured, tell the client so it can show the right UI
     if (getAIProvider() === 'none') {
-      return NextResponse.json({ error: 'no-ai', fallback: randomCurated() }, { status: 503 })
+      return NextResponse.json(
+        { error: 'no-ai', fallback: toClientPuzzle(randomCurated()) },
+        { status: 503 },
+      )
     }
     const puzzle = await generateAIPuzzle()
     // generateAIPuzzle returns null if generation failed — fall back to curated
-    return NextResponse.json(puzzle ?? randomCurated())
+    if (!puzzle) return NextResponse.json(toClientPuzzle(randomCurated()))
+
+    // AI puzzles aren't in puzzles.json, so stash the answers for later lookup
+    rememberAIPuzzle(puzzle)
+    return NextResponse.json(toClientPuzzle(puzzle))
   }
 
   return NextResponse.json({ error: 'Invalid mode' }, { status: 400 })

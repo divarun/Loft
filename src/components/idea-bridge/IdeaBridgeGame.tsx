@@ -60,7 +60,6 @@ export default function IdeaBridgeGame() {
   }
 
   const puzzle = game.puzzle
-  const currentStep = puzzle?.steps[game.step]
 
   const handleModeChange = (m: IdeaBridgeMode) => {
     game.setMode(m)
@@ -215,8 +214,8 @@ export default function IdeaBridgeGame() {
                 <span className={styles.scoreLabel}>pts</span>
               </div>
               <div className={styles.metaRight}>
-                <span className={styles.stepIndicator} aria-label={`Step ${game.step + 1} of ${puzzle.steps.length}`}>
-                  Step {game.done ? puzzle.steps.length : game.step + 1} / {puzzle.steps.length}
+                <span className={styles.stepIndicator} aria-label={`Step ${game.step + 1} of ${puzzle.stepCount}`}>
+                  Step {game.done ? puzzle.stepCount : game.step + 1} / {puzzle.stepCount}
                 </span>
                 <span
                   className={`${styles.diffBadge} ${
@@ -235,7 +234,7 @@ export default function IdeaBridgeGame() {
             {/* Chain visualization */}
             <ChainViz
               words={game.chain}
-              totalSteps={puzzle.steps.length}
+              totalSteps={puzzle.stepCount}
               done={game.done}
               won={game.done && game.score > 0}
             />
@@ -288,6 +287,7 @@ export default function IdeaBridgeGame() {
             ) : (
               <ResultCard
                 puzzle={puzzle}
+                solution={game.solution}
                 chain={game.chain}
                 score={game.score}
                 totalWrong={game.totalWrong}

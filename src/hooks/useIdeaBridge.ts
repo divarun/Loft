@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { getDayNumber } from '@/lib/dayNumber'
-import type { Puzzle, BridgeState, HistoryRecord } from '@/types/bridge'
+import type { Puzzle, Solution, BridgeState, HistoryRecord } from '@/types/bridge'
 
 export type IdeaBridgeMode = 'daily' | 'practice' | 'ai'
 
@@ -16,11 +16,12 @@ export interface ExtendedBridgeState extends BridgeState {
   wrongFeedback: string | null
   hint: string | null
   totalWrong: number
+  solution: Solution | null
 }
 
 export interface IdeaBridgeActions {
   submitWord: (input: string) => Promise<void>
-  useHint: () => void
+  useHint: () => Promise<void>
   skipPuzzle: () => void
   nextPuzzle: () => void
   setMode: (mode: IdeaBridgeMode) => void
@@ -79,8 +80,17 @@ export function useIdeaBridge(): ExtendedBridgeState & IdeaBridgeActions {
   const [dailyResult, setDailyResult] = useState<'won' | 'lost' | null>(null)
   const [shareText, setShareText] = useState('')
   const [loading, setLoading] = useState(false)
+  const [solution, setSolution] = useState<Solution | null>(null)
 
   const explainTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // The step-explanation timer advances the puzzle 1.1s after a correct answer —
+  // it has to be cancelled on unmount or it fires against a dead component.
+  useEffect(() => {
+    return () => {
+      if (explainTimerRef.current) clearTimeout(explainTimerRef.current)
+    }
+  }, [])
 
   // Load history and streak from localStorage on mount
   useEffect(() => {
@@ -112,6 +122,7 @@ export function useIdeaBridge(): ExtendedBridgeState & IdeaBridgeActions {
       setHint(null)
       setStepExplain(null)
       setWrongFeedback(null)
+      setSolution(null)
     } catch (err) {
       setValidationError(err instanceof Error ? err.message : 'Failed to load puzzle')
     } finally {
@@ -137,15 +148,31 @@ export function useIdeaBridge(): ExtendedBridgeState & IdeaBridgeActions {
   }, [mode])
 
   const endPuzzle = useCallback(
-    (
+    async (
       won: boolean,
-      finalChain: string[],
+      playerChain: string[],
       finalScore: number,
       puzzle: Puzzle,
       currentStreak: number,
       finalWrong: number,
     ) => {
       setDone(true)
+
+      // The intended chain and the closing fact live server-side until now, so
+      // that losing (or peeking at the network tab) is the only way to see them.
+      let sol: Solution | null = null
+      try {
+        const res = await fetch(`/api/puzzle/solution?id=${encodeURIComponent(String(puzzle.id))}`)
+        if (res.ok) {
+          sol = (await res.json()) as Solution
+          setSolution(sol)
+        }
+      } catch {
+        // Result card degrades to just the player's own chain
+      }
+
+      // On a loss we show the intended path; on a win the player's chain is it
+      const finalChain = won ? playerChain : (sol?.chain ?? playerChain)
 
       const newStreak = won ? currentStreak + 1 : 0
       setStreak(newStreak)
@@ -191,8 +218,7 @@ export function useIdeaBridge(): ExtendedBridgeState & IdeaBridgeActions {
       const trimmed = input.trim()
       if (!trimmed) return
 
-      const currentStep = puzzle.steps[step]
-      if (!currentStep) return
+      if (step >= puzzle.stepCount) return
 
       setValidating(true)
       setWrongFeedback(null)
@@ -203,9 +229,10 @@ export function useIdeaBridge(): ExtendedBridgeState & IdeaBridgeActions {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            puzzleId: puzzle.id,
+            step,
             from: chain[chain.length - 1],
             userInput: trimmed,
-            targetWord: currentStep.correct,
           }),
         })
         if (!res.ok) throw new Error('Validation request failed')
@@ -213,22 +240,23 @@ export function useIdeaBridge(): ExtendedBridgeState & IdeaBridgeActions {
           valid: boolean
           canonical: string | null
           explanation: string
+          explain: string | null
         }
 
         if (data.valid) {
-          const wordToAdd = data.canonical ?? currentStep.correct
+          const wordToAdd = data.canonical ?? trimmed
           const newChain = [...chain, wordToAdd]
           setChain(newChain)
           setHint(null)
           setHintUsed(false)
 
           // Show step explanation briefly
-          setStepExplain(currentStep.explain)
+          setStepExplain(data.explain)
           if (explainTimerRef.current) clearTimeout(explainTimerRef.current)
           explainTimerRef.current = setTimeout(() => {
             setStepExplain(null)
             const nextStep = step + 1
-            if (nextStep >= puzzle.steps.length) {
+            if (nextStep >= puzzle.stepCount) {
               endPuzzle(true, newChain, score, puzzle, streak, totalWrong)
             } else {
               setStep(nextStep)
@@ -241,11 +269,7 @@ export function useIdeaBridge(): ExtendedBridgeState & IdeaBridgeActions {
           setTotalWrong(newWrong)
           setWrongFeedback(data.explanation || 'Not quite — try a different connection.')
           if (newScore <= 0) {
-            const correctChain = [
-              puzzle.start,
-              ...puzzle.steps.map(s => s.correct),
-            ]
-            endPuzzle(false, correctChain, 0, puzzle, streak, newWrong)
+            endPuzzle(false, chain, 0, puzzle, streak, newWrong)
           }
         }
       } catch (err) {
@@ -257,25 +281,35 @@ export function useIdeaBridge(): ExtendedBridgeState & IdeaBridgeActions {
     [puzzle, validating, done, step, chain, score, totalWrong, streak, endPuzzle],
   )
 
-  const useHint = useCallback(() => {
-    if (!puzzle || done || hintUsed) return
-    const currentStep = puzzle.steps[step]
-    if (!currentStep) return
+  const useHint = useCallback(async () => {
+    if (!puzzle || done || hintUsed || step >= puzzle.stepCount) return
+
+    // Charge for the hint only once we actually have one to show
+    let word: string
+    try {
+      const res = await fetch(
+        `/api/puzzle/hint?id=${encodeURIComponent(String(puzzle.id))}&step=${step}`,
+      )
+      if (!res.ok) throw new Error('Hint request failed')
+      word = ((await res.json()) as { hint: string }).hint
+    } catch {
+      setValidationError('Could not load a hint — try again.')
+      return
+    }
+
     const newScore = Math.max(0, score - HINT_PENALTY)
     setScore(newScore)
     setHintUsed(true)
-    setHint(currentStep.correct)
+    setHint(word)
     if (newScore <= 0) {
-      const correctChain = [puzzle.start, ...puzzle.steps.map(s => s.correct)]
-      endPuzzle(false, correctChain, 0, puzzle, streak, totalWrong)
+      endPuzzle(false, chain, 0, puzzle, streak, totalWrong)
     }
-  }, [puzzle, done, hintUsed, step, score, streak, totalWrong, endPuzzle])
+  }, [puzzle, done, hintUsed, step, score, chain, streak, totalWrong, endPuzzle])
 
   const skipPuzzle = useCallback(() => {
     if (!puzzle) return
-    const correctChain = [puzzle.start, ...puzzle.steps.map(s => s.correct)]
-    endPuzzle(false, correctChain, 0, puzzle, streak, totalWrong)
-  }, [puzzle, streak, totalWrong, endPuzzle])
+    endPuzzle(false, chain, 0, puzzle, streak, totalWrong)
+  }, [puzzle, chain, streak, totalWrong, endPuzzle])
 
   const nextPuzzle = useCallback(() => {
     const nextMode = mode === 'daily' ? 'practice' : mode
@@ -317,6 +351,7 @@ export function useIdeaBridge(): ExtendedBridgeState & IdeaBridgeActions {
     dailyDone,
     dailyResult,
     shareText,
+    solution,
     submitWord,
     useHint,
     skipPuzzle,

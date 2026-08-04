@@ -4,7 +4,11 @@ export interface PuzzleStep {
   explain: string
 }
 
-export interface Puzzle {
+/**
+ * The full puzzle including answers. SERVER ONLY — never serialise this to the
+ * client, or every answer shows up in the network tab. Use `Puzzle` instead.
+ */
+export interface FullPuzzle {
   id: number | string
   difficulty: 'easy' | 'medium' | 'hard'
   start: string
@@ -12,6 +16,22 @@ export interface Puzzle {
   steps: PuzzleStep[]
   fact: string
   source: 'curated' | 'ai'
+}
+
+/** The answer-free shape sent to the browser. */
+export interface Puzzle {
+  id: number | string
+  difficulty: 'easy' | 'medium' | 'hard'
+  start: string
+  target: string
+  stepCount: number
+  source: 'curated' | 'ai'
+}
+
+/** Revealed only once the puzzle is over (won, lost, or skipped). */
+export interface Solution {
+  chain: string[]
+  fact: string
 }
 
 export interface BridgeState {

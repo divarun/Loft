@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "playwright test",
+    "test:unit": "playwright test --project=unit",
+    "test:e2e": "playwright test --project=e2e"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.35.0",

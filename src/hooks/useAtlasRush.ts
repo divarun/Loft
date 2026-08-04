@@ -1,6 +1,6 @@
 'use client'
 
-import { useReducer, useEffect, useRef, useCallback } from 'react'
+import { useReducer, useEffect, useRef, useState, useCallback } from 'react'
 import type { Country, ClueKey, ClueState, GameMode, Difficulty, InputMode, BestScore } from '@/types/atlas'
 import { buildAltNamesMap, normalizeGuess } from '@/lib/normalizeGuess'
 import { haversineKm, distanceFeedback, bearingDeg } from '@/lib/haversine'
@@ -264,6 +264,9 @@ export function useAtlasRush() {
   const [state, dispatch] = useReducer(reducer, initialState)
   // topojson features live in a ref to avoid heavy re-renders
   const worldFeaturesRef = useRef<unknown[] | null>(null)
+  const atlasStatusRef = useRef<'idle' | 'loading' | 'ready' | 'failed'>('idle')
+  // Bumped when the atlas resolves, purely to trigger a re-render
+  const [, setAtlasVersion] = useState(0)
   const randRef = useRef<(() => number) | null>(null)
   const countriesRef = useRef<Country[]>([])
   const centroidsRef = useRef<Record<string, [number, number]>>({})
@@ -299,22 +302,36 @@ export function useAtlasRush() {
       }
 
       dispatch({ type: 'INIT', countries, streak, bestScores, dayNumber })
-
-      // Load world atlas for shape clue
-      fetch(WORLD_ATLAS_URL)
-        .then((r) => r.json())
-        .then(async (topo) => {
-          const { feature } = await import('topojson-client')
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const features = (feature(topo, (topo as any).objects.countries) as any).features
-          worldFeaturesRef.current = features
-        })
-        .catch(() => {
-          // Shape clue degrades gracefully if atlas fails
-        })
     }
     boot()
   }, [])
+
+  // ------------- Lazy-load the world atlas for the shape clue ---------------
+  // It's a ~700KB CDN payload and the shape is the 5th of 7 clues, so most
+  // rounds never need it. Fetch it the first time a round actually gets there.
+  useEffect(() => {
+    const shapeIndex = CLUE_KEYS.indexOf('shape')
+    if (state.revealed <= shapeIndex) return
+    if (worldFeaturesRef.current || atlasStatusRef.current !== 'idle') return
+
+    atlasStatusRef.current = 'loading'
+    fetch(WORLD_ATLAS_URL)
+      .then((r) => r.json())
+      .then(async (topo) => {
+        const { feature } = await import('topojson-client')
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const features = (feature(topo, (topo as any).objects.countries) as any).features
+        worldFeaturesRef.current = features
+        atlasStatusRef.current = 'ready'
+        // The ref is read during render, so nudge React to paint the shape
+        setAtlasVersion((v) => v + 1)
+      })
+      .catch(() => {
+        // Shape clue degrades gracefully if the atlas fails
+        atlasStatusRef.current = 'failed'
+        setAtlasVersion((v) => v + 1)
+      })
+  }, [state.revealed])
 
   // ------------- Start practice round once countries are loaded -------------
   useEffect(() => {

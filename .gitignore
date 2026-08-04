@@ -36,3 +36,5 @@ Thumbs.db
 .claude/
 CLAUDE.md
 
+test-results/
+playwright-report/

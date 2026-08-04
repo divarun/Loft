@@ -12,7 +12,7 @@
 
 import OpenAI from 'openai'
 import Anthropic from '@anthropic-ai/sdk'
-import type { Puzzle } from '@/types/bridge'
+import type { FullPuzzle } from '@/types/bridge'
 
 // ── Provider detection ─────────────────────────────────────────────────────
 
@@ -74,9 +74,17 @@ export interface BridgeValidation {
   explanation: string
 }
 
+/**
+ * Validation sits in the middle of the play loop — the player can't do anything
+ * until it returns. Measured NIM round-trips ranged from 5s to 29s, so cap it
+ * and fall back to exact matching rather than freeze the game.
+ */
+const VALIDATE_TIMEOUT_MS = 9_000
+
 const VALIDATE_SYSTEM =
   'You are a word association validator. Reply only with a JSON object matching: ' +
-  '{ "valid": boolean, "canonical": string | null, "explanation": string }'
+  '{ "valid": boolean, "canonical": string | null, "explanation": string }. ' +
+  'Keep "explanation" under 15 words.'
 
 function validatePrompt(from: string, userInput: string, targetWord: string): string {
   return (
@@ -91,27 +99,33 @@ function validatePrompt(from: string, userInput: string, targetWord: string): st
 async function validateWithNim(params: {
   from: string; userInput: string; targetWord: string
 }): Promise<BridgeValidation> {
-  const resp = await nimClient().chat.completions.create({
-    model: getNimModel(),
-    messages: [
-      { role: 'system', content: VALIDATE_SYSTEM },
-      { role: 'user',   content: validatePrompt(params.from, params.userInput, params.targetWord) },
-    ],
-    max_tokens: 256,
-    temperature: 0.1,
-  })
+  const resp = await nimClient().chat.completions.create(
+    {
+      model: getNimModel(),
+      messages: [
+        { role: 'system', content: VALIDATE_SYSTEM },
+        { role: 'user',   content: validatePrompt(params.from, params.userInput, params.targetWord) },
+      ],
+      max_tokens: 120,
+      temperature: 0.1,
+    },
+    { signal: AbortSignal.timeout(VALIDATE_TIMEOUT_MS) },
+  )
   return extractJSON(resp.choices[0]?.message?.content ?? '{}') as BridgeValidation
 }
 
 async function validateWithAnthropic(params: {
   from: string; userInput: string; targetWord: string
 }): Promise<BridgeValidation> {
-  const msg = await anthropicClient().messages.create({
-    model: ANTHROPIC_FAST_MODEL,
-    max_tokens: 256,
-    system: VALIDATE_SYSTEM,
-    messages: [{ role: 'user', content: validatePrompt(params.from, params.userInput, params.targetWord) }],
-  })
+  const msg = await anthropicClient().messages.create(
+    {
+      model: ANTHROPIC_FAST_MODEL,
+      max_tokens: 120,
+      system: VALIDATE_SYSTEM,
+      messages: [{ role: 'user', content: validatePrompt(params.from, params.userInput, params.targetWord) }],
+    },
+    { signal: AbortSignal.timeout(VALIDATE_TIMEOUT_MS) },
+  )
   const text = msg.content[0].type === 'text' ? msg.content[0].text : '{}'
   return extractJSON(text) as BridgeValidation
 }
@@ -162,7 +176,7 @@ const GENERATE_PROMPT =
   '}\n' +
   'Create 3–5 steps. Make the lateral connections clever but fair. Wrong options should be plausible on first read but clearly incorrect on reflection.'
 
-async function generateWithNim(): Promise<Puzzle> {
+async function generateWithNim(): Promise<FullPuzzle> {
   const resp = await nimClient().chat.completions.create({
     model: getNimModel(),
     messages: [
@@ -173,10 +187,10 @@ async function generateWithNim(): Promise<Puzzle> {
     temperature: 0.9,
   })
   const parsed = extractJSON(resp.choices[0]?.message?.content ?? '')
-  return { id: `ai-nim-${Date.now()}`, source: 'ai', ...(parsed as object) } as Puzzle
+  return { id: `ai-nim-${Date.now()}`, source: 'ai', ...(parsed as object) } as FullPuzzle
 }
 
-async function generateWithAnthropic(): Promise<Puzzle> {
+async function generateWithAnthropic(): Promise<FullPuzzle> {
   const msg = await anthropicClient().messages.create({
     model: ANTHROPIC_SMART_MODEL,
     max_tokens: 1024,
@@ -185,13 +199,13 @@ async function generateWithAnthropic(): Promise<Puzzle> {
   })
   const text = msg.content[0].type === 'text' ? msg.content[0].text : ''
   const parsed = extractJSON(text)
-  return { id: `ai-anthropic-${Date.now()}`, source: 'ai', ...(parsed as object) } as Puzzle
+  return { id: `ai-anthropic-${Date.now()}`, source: 'ai', ...(parsed as object) } as FullPuzzle
 }
 
 /**
  * Returns null when no AI is configured — callers should fall back to curated puzzles.
  */
-export async function generateAIPuzzle(): Promise<Puzzle | null> {
+export async function generateAIPuzzle(): Promise<FullPuzzle | null> {
   const provider = getAIProvider()
   try {
     if (provider === 'nvidia-nim') return await generateWithNim()

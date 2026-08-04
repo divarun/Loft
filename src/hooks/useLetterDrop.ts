@@ -194,6 +194,10 @@ export function useLetterDrop() {
   const slowUntilRef        = useRef<number>(0)
   const freezeUntilRef      = useRef<number>(0)
   const freezeStartRef      = useRef<number>(0) // when freeze began
+  const pausedAtRef         = useRef<number>(0) // performance.now() when pause began
+  // Authoritative lives counter. `state.lives` lags by a dispatch, so two tiles
+  // landing in the same frame would both read the pre-decrement value.
+  const livesRef            = useRef<number>(3)
 
   // Stable refs to avoid stale closures
   const stateRef    = useRef(state)
@@ -327,8 +331,8 @@ export function useLetterDrop() {
       setTimeout(() => gl.remove(), 1500)
     }
 
-    // Check lives after this dispatch — we use stateRef.current.lives - 1 (optimistic)
-    if (stateRef.current.lives - 1 <= 0) {
+    livesRef.current -= 1
+    if (livesRef.current <= 0) {
       setTimeout(() => endGameRef.current?.(), 300)
     }
   }
@@ -422,6 +426,8 @@ export function useLetterDrop() {
     slowUntilRef.current = 0
     freezeUntilRef.current = 0
     freezeStartRef.current = 0
+    pausedAtRef.current = 0
+    livesRef.current = initialState.lives
 
     if (arenaRef.current) arenaRef.current.innerHTML = ''
     if (groundRef.current) groundRef.current.innerHTML = ''
@@ -528,13 +534,28 @@ export function useLetterDrop() {
     const s = stateRef.current
     if (!s.running) return
     if (s.paused) {
+      // Tile fall progress is derived from `performance.now() - startTime`, so the
+      // whole paused interval has to be added back or every tile snaps to the
+      // ground the instant we resume.
+      const elapsed = performance.now() - pausedAtRef.current
+      tilesRef.current.forEach(t => { if (!t.removed) t.startTime += elapsed })
+      if (slowUntilRef.current)   slowUntilRef.current   += elapsed
+      if (freezeUntilRef.current) freezeUntilRef.current += elapsed
+      if (lastCorrectTimeRef.current) lastCorrectTimeRef.current += elapsed
+      pausedAtRef.current = 0
+
       dispatch({ type: 'RESUME' })
+      spawnIntervalRef.current = setInterval(spawnTile, spawnDelay(s.level))
       rafRef.current = requestAnimationFrame(gameLoop)
     } else {
+      pausedAtRef.current = performance.now()
       dispatch({ type: 'PAUSE' })
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      if (spawnIntervalRef.current) clearInterval(spawnIntervalRef.current)
+      rafRef.current = null
+      spawnIntervalRef.current = null
     }
-  }, [gameLoop])
+  }, [gameLoop, spawnTile])
 
   // ── Toggle sound ────────────────────────────────────────────────────────
   const toggleSound = useCallback(() => {
